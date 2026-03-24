@@ -1,0 +1,3112 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>iGreen Energy - Desconto na Conta de Luz</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Lenis (Smooth Scroll) -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        stone: {
+                            50: '#fafaf9',
+                            100: '#f5f5f4',
+                            200: '#e7e5e4',
+                            300: '#d6d3d1',
+                            400: '#a8a29e',
+                            500: '#78716c',
+                            600: '#57534e',
+                            700: '#44403c',
+                            800: '#292524',
+                            900: '#1c1917',
+                        },
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        'surface-light': '#EAEAE5',
+                    },
+                    backgroundImage: {
+                        'noise': "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+                    },
+                    keyframes: {
+                        shimmer: {
+                            from: { backgroundPosition: '0 0' },
+                            to: { backgroundPosition: '-200% 0' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* BASE STYLES */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0c0a09;
+            /* stone-950 */
+            color: #fafaf9;
+            /* stone-50 */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Lenis Recommended CSS */
+        html.lenis,
+        html.lenis body {
+            height: auto;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none;
+        }
+
+        /* TEXT OUTLINE */
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+            color: transparent;
+            transition: all 0.5s ease;
+        }
+
+        /* NOISE Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.012;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.1' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* READING PROGRESS BAR */
+        #reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: #22c55e;
+            z-index: 10001;
+            transition: width 0.1s ease-out;
+        }
+
+        /* TEXT REVEAL ANIMATION */
+        .text-reveal-wrapper {
+            overflow: hidden;
+            display: block;
+        }
+
+        .text-reveal-content {
+            transform: translateY(110%);
+            opacity: 0;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+            display: block;
+        }
+
+        .active .text-reveal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* BEAM BUTTON ANIMATION */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-beam {
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            border-radius: 9999px;
+        }
+
+        .btn-beam::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            z-index: -1;
+            background: conic-gradient(from 90deg at 50% 50%, #22c55e 0%, #000000 50%, #22c55e 100%);
+            animation: spin 4s linear infinite;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-beam:hover::before {
+            opacity: 1;
+        }
+
+        .btn-beam-content {
+            background-color: #1c1917;
+            color: white;
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-beam-green .btn-beam-content {
+            background-color: #22c55e;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-beam-green:hover .btn-beam-content {
+            background-color: #16a34a;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #EAEAE5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e;
+        }
+
+        /* Reveal Animations */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(10px);
+            will-change: transform, opacity, filter;
+        }
+
+        .reveal-up.active {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-scrub-container {
+            /* Height will determine how far the user has to scroll to scrub the whole video */
+            height: 400vh;
+        }
+
+        /* Video Styling */
+        .video-container {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 40px rgba(34, 197, 94, 0.1);
+            transform: translateZ(0);
+            /* Force hardware acc */
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+        }
+
+        .video-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .video-container:hover {
+            transform: scale(1.02) translateZ(0);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2), 0 0 60px rgba(34, 197, 94, 0.15);
+        }
+
+        /* Background Animated Glows */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            animation: pulse-slow 10s infinite alternate;
+            z-index: 0;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        @keyframes pulse-slow {
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.15;
+            }
+
+            100% {
+                transform: scale(1.4) translate(20px, -20px);
+                opacity: 0.4;
+            }
+        }
+
+        /* Flashlight Effect */
+        .flashlight-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flashlight-card::before {
+            content: "";
+            position: absolute;
+            inset: 0px;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y),
+                    rgba(34, 197, 94, 0.12),
+                    transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .flashlight-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Step Marker / HUD */
+        .step-marker {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-marker::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            width: 0px;
+            height: 1px;
+            background: #22c55e;
+            transition: width 0.3s ease;
+        }
+
+        .step-marker.active::after {
+            width: 10px;
+        }
+
+        .step-marker.active {
+            color: #22c55e;
+            transform: scale(1.1);
+        }
+
+        /* --- MOBILE PERFORMANCE OPTIMIZATIONS --- */
+        @media (max-width: 768px) {
+            .noise-overlay {
+                display: none !important;
+            }
+
+            .glow-orb {
+                display: none !important;
+                /* Hide to save layers */
+            }
+
+            .flashlight-card::before,
+            .trust-card::before {
+                display: none !important;
+            }
+
+            /* Simplify buttons */
+            .btn-beam::before {
+                display: none !important;
+                animation: none !important;
+            }
+
+            .btn-beam-content {
+                transition: transform 0.1s ease, background-color 0.2s ease !important;
+            }
+
+            .btn-beam:active .btn-beam-content {
+                transform: scale(0.96) !important;
+                background-color: #16a34a !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen relative selection:bg-primary-500 selection:text-white">
+
+    <div class="noise-overlay"></div>
+
+    <!-- NAVBAR Glassmorphism (Dark) -->
+    <header class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="absolute inset-0 bg-[#0c0a09]/70 backdrop-blur-md border-b border-stone-800/50"></div>
+        <div class="max-w-[1440px] mx-auto px-6 py-4 relative flex justify-between items-center">
+            <a href="#hero" class="flex items-center group cursor-pointer">
+                <img src="assets/logo-igreen.svg" alt="iGreen Energy"
+                    class="h-8 md:h-10 w-auto transition-transform duration-500 group-hover:scale-105 pointer-events-none">
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-widest text-stone-400">
+                <a href="#hero" class="hover:text-primary-500 transition-colors">Energia</a>
+                <a href="#beneficios" class="hover:text-primary-500 transition-colors">Vantagens</a>
+                <a href="#como-funciona" class="hover:text-primary-500 transition-colors">Como
+                    Funciona</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <a href="#calculator-panel"
+                    class="text-sm font-medium text-stone-100 border border-stone-700 px-6 py-2.5 rounded-full hover:border-primary-500 hover:text-stone-900 hover:bg-primary-500 transition-all">Simular
+                    Desconto</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION (SCROLL VIDEO SCRUB) -->
+    <main id="hero" class="hero-scrub-container relative bg-stone-950">
+
+        <!-- Sticky Container -->
+        <div class="sticky top-0 h-[100vh] w-full flex items-center justify-center overflow-hidden relative">
+
+            <!-- Glowing Orbs Behind -->
+            <div class="glow-orb bg-primary-300 w-[600px] h-[600px] absolute top-1/4 right-0 translate-x-1/4"></div>
+            <div class="glow-orb bg-white w-[500px] h-[500px] absolute bottom-1/4 left-0 -translate-x-1/4"></div>
+
+            <!-- Absolute Background Video Wrapper (Full Width) -->
+            <div class="absolute inset-0 z-0 overflow-hidden w-full h-full pointer-events-none">
+                <!-- Temporary loading state / poster -->
+                <div id="video-loading" class="absolute inset-0 flex items-center justify-center bg-stone-950 z-20">
+                    <iconify-icon icon="solar:spinner-bold-duotone"
+                        class="text-4xl text-primary-500 animate-spin"></iconify-icon>
+                </div>
+
+                <canvas id="hero-canvas" class="absolute inset-0 w-full h-full object-cover z-10 opacity-0"></canvas>
+
+                <!-- Digital Scanlines Overlay -->
+                <div
+                    class="hidden md:block absolute inset-0 z-20 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]">
+                </div>
+
+                <!-- Subtle inner gradient for text readability (Dark Mode) -->
+                <!-- Mobile: Gradient top-to-bottom. Desktop: Gradient to the right. -->
+                <div id="hero-gradient-overlay"
+                    class="absolute inset-0 bg-gradient-to-b from-stone-950 via-stone-950/80 to-stone-950/40 md:bg-transparent md:bg-gradient-to-r md:from-stone-950 md:via-stone-950/60 md:to-transparent z-10">
+                </div>
+            </div>
+
+            <div
+                class="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 h-full relative z-10 flex flex-col justify-center pointer-events-none">
+
+                <!-- Text Overlay Content -->
+                <div id="hero-text-content" class="relative z-20 max-w-2xl text-left pt-20 lg:pt-0 pointer-events-auto">
+
+                    <!-- Pre-headline -->
+                    <div class="inline-flex items-center gap-3 mb-6 opacity-0 translate-y-[30px] hero-gsap-entrance">
+                        <div class="relative flex h-3 w-3">
+                            <span
+                                class="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
+                        </div>
+                        <span class="text-xs font-mono uppercase tracking-[0.2em] text-stone-400">Energia
+                            Inteligente</span>
+                    </div>
+
+                    <!-- Headline -->
+                    <h1
+                        class="font-display text-5xl md:text-6xl lg:text-[5.5rem] font-bold tracking-tighter leading-[0.9] mb-8 text-white relative">
+                        <div class="text-reveal-wrapper hero-gsap-entrance">
+                            <span class="text-reveal-content inline-block">Pague <span
+                                    class="text-outline text-white/40">menos</span> na</span>
+                        </div>
+                        <div class="text-reveal-wrapper hero-gsap-entrance">
+                            <span class="text-reveal-content inline-block">sua conta de luz</span>
+                        </div>
+                        <div
+                            class="text-primary-500 text-4xl md:text-5xl lg:text-6xl mt-2 font-medium tracking-tight text-reveal-wrapper hero-gsap-entrance">
+                            <span class="text-reveal-content inline-block">— sem custo algum.</span>
+                        </div>
+                    </h1>
+
+                    <!-- Body Text -->
+                    <p
+                        class="text-lg md:text-xl text-stone-300 max-w-lg leading-relaxed font-light mb-10 text-reveal-wrapper hero-gsap-entrance">
+                        <span class="text-reveal-content inline-block">A Igreen conecta você à energia solar com
+                            desconto
+                            real todo mês. <strong class="font-medium text-white">Sem obras, sem instalação, sem
+                                burocracia.</strong></span>
+                    </p>
+
+                    <!-- Buttons -->
+                    <div class="flex flex-wrap items-center gap-4 opacity-0 translate-y-[30px] hero-gsap-entrance">
+                        <!-- Primary Beam CTA -->
+                        <button id="btn-scroll-calc"
+                            class="btn-beam btn-beam-green p-[2px] w-full sm:w-auto min-w-[280px] h-14 group block cursor-pointer">
+                            <div
+                                class="btn-beam-content rounded-full font-medium tracking-wide flex gap-3 items-center text-base">
+                                Quero meu desconto agora
+                                <iconify-icon icon="solar:arrow-right-linear"
+                                    class="group-hover:translate-x-1 transition-transform text-lg text-white"></iconify-icon>
+                            </div>
+                        </button>
+
+                        <!-- Secondary CTA -->
+                        <button id="btn-scroll-info"
+                            class="px-6 py-4 text-stone-300 hover:text-primary-400 font-medium text-sm flex items-center gap-2 transition-colors group">
+                            Explorar mais
+                            <iconify-icon icon="solar:round-alt-arrow-down-linear"
+                                class="text-lg group-hover:translate-y-1 transition-transform"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Enhanced Calculator Panel (Dobra 2) -->
+                <div id="calculator-panel"
+                    class="absolute inset-0 m-auto w-[calc(100%-3rem)] md:w-full max-w-[500px] h-fit bg-stone-900/80 backdrop-blur-md md:backdrop-blur-[60px] border border-white/10 rounded-[32px] p-8 lg:p-10 z-30 opacity-0 filter blur-md md:blur-lg translate-y-12 pointer-events-auto shadow-[0_50px_100px_-20px_rgba(0,0,0,0.6)] overflow-hidden transition-all duration-500 hover:border-primary-500/30 group/panel"
+                    onmousemove="const calcRect = this.getBoundingClientRect(); this.style.setProperty('--mouse-x', `${event.clientX - calcRect.left}px`); this.style.setProperty('--mouse-y', `${event.clientY - calcRect.top}px`);">
+
+                    <!-- Internal Spotlight Effect -->
+                    <div class="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-700 group-hover/panel:opacity-100"
+                        style="background: radial-gradient(500px circle at var(--mouse-x) var(--mouse-y), rgba(34, 197, 94, 0.08), transparent 80%);">
+                    </div>
+
+                    <!-- HUD Accents -->
+                    <div
+                        class="absolute top-4 left-4 flex gap-1 opacity-20 group-hover/panel:opacity-40 transition-opacity">
+                        <div class="w-1 h-1 bg-primary-500"></div>
+                        <div class="w-4 h-[1px] bg-primary-500 mt-[2px]"></div>
+                    </div>
+                    <div
+                        class="absolute bottom-4 right-4 flex gap-1 items-end opacity-20 group-hover/panel:opacity-40 transition-opacity">
+                        <div class="w-4 h-[1px] bg-primary-500 mb-[2px]"></div>
+                        <div class="w-1 h-1 bg-primary-500"></div>
+                    </div>
+                    <div class="absolute top-4 right-4 font-mono text-[8px] tracking-[0.3em] text-white/20 uppercase">
+                        IG_INST_V.4</div>
+
+                    <!-- Ambient Orbs -->
+                    <div
+                        class="absolute -top-32 -right-32 w-80 h-80 bg-primary-500/10 blur-[120px] pointer-events-none rounded-full animate-float">
+                    </div>
+                    <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-primary-400/5 blur-[100px] pointer-events-none rounded-full animate-float"
+                        style="animation-delay: -3s"></div>
+
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-primary-500/10 flex items-center justify-center border border-primary-500/20">
+                                    <iconify-icon icon="solar:calculator-minimalistic-bold-duotone"
+                                        class="text-xl text-primary-400"></iconify-icon>
+                                </div>
+                                <div>
+                                    <h2 class="font-display text-xl font-bold text-white tracking-tight">Simulador <span
+                                            class="text-primary-400">iGreen</span></h2>
+                                    <p class="text-[10px] text-stone-500 font-mono uppercase tracking-widest">Calculo de
+                                        Eficiência Energética</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Input Group -->
+                        <div class="relative mb-10 group/input">
+                            <label
+                                class="block text-[10px] text-stone-500 font-mono uppercase tracking-[0.2em] mb-3 ml-1">Média
+                                Mensal da Fatura</label>
+                            <div
+                                class="relative flex items-center bg-stone-950/60 border border-white/5 rounded-2xl px-6 py-5 focus-within:border-primary-500/50 transition-all backdrop-blur-md shadow-inner">
+                                <span class="text-primary-500/40 font-medium text-xl mr-3">R$</span>
+                                <input type="text" id="calc-input" placeholder="0,00"
+                                    class="w-full bg-transparent text-white text-3xl outline-none font-display font-bold placeholder:text-stone-800 tracking-tighter"
+                                    inputmode="numeric">
+                            </div>
+                        </div>
+
+                        <!-- Results Data HUD -->
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div
+                                class="bg-white/5 border border-white/5 rounded-2xl p-4 hover:bg-white/10 transition-colors">
+                                <span
+                                    class="block text-[9px] text-stone-500 font-mono uppercase tracking-widest mb-1">Economia/Mês</span>
+                                <span class="text-primary-400 font-mono text-xl font-bold" id="res-economia">R$
+                                    0,00</span>
+                            </div>
+                            <div
+                                class="bg-white/5 border border-white/5 rounded-2xl p-4 hover:bg-white/10 transition-colors">
+                                <span
+                                    class="block text-[9px] text-stone-500 font-mono uppercase tracking-widest mb-1">Novo
+                                    Valor</span>
+                                <span class="text-white font-mono text-xl font-bold" id="res-paga">R$ 0,00</span>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-primary-500/5 border border-primary-500/10 rounded-2xl p-5 mb-8 flex items-center justify-between">
+                            <div>
+                                <span
+                                    class="block text-[9px] text-primary-500/60 font-mono uppercase tracking-[0.2em] mb-1">Economia
+                                    em 1 Ano</span>
+                                <span class="text-primary-400 font-display text-2xl font-bold tracking-tighter"
+                                    id="res-25anos">R$ 0,00</span>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-full border border-primary-500/20 flex items-center justify-center bg-primary-500/5">
+                                <iconify-icon icon="solar:banknote-bold-duotone"
+                                    class="text-xl text-primary-400"></iconify-icon>
+                            </div>
+                        </div>
+
+                        <!-- CTA -->
+                        <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Fiz%20uma%20simula%C3%A7%C3%A3o%20no%20site%20e%20gostaria%20de%20garantir%20meu%20desconto%20na%20conta%20de%20luz."
+                            id="calc-whatsapp-btn" target="_blank"
+                            class="btn-beam btn-beam-green p-[1px] w-full h-16 group block cursor-pointer mb-6">
+                            <div
+                                class="btn-beam-content rounded-[20px] font-bold tracking-wide flex gap-3 items-center justify-center text-lg">
+                                <iconify-icon icon="solar:chat-round-money-bold-duotone"
+                                    class="text-2xl"></iconify-icon>
+                                Garantir esse desconto
+                            </div>
+                        </a>
+
+                        <p
+                            class="text-[9px] text-stone-600 text-center font-mono uppercase tracking-[0.2em] opacity-50">
+                            IGREEN_PROTO_SIM_V4.2 // NO_COST_ENTRY</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Note: Previous dummy calculator section removed as requested. -->
+
+    <!-- 3. DOBRA DE BENEFÍCIOS (BENTO GRID) -->
+    <section id="beneficios"
+        class="relative z-20 bg-stone-950 pt-[80px] md:pt-[100px] pb-[160px] min-h-fit flex flex-col justify-center overflow-hidden border-t border-stone-800 origin-top">
+        <!-- SVG Noise Overlay (Local) -->
+        <div
+            class="hidden md:block absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E')] opacity-[0.03] mix-blend-overlay pointer-events-none">
+        </div>
+
+        <!-- Watermark -->
+        <div
+            class="absolute top-[5%] left-0 w-full pointer-events-none select-none opacity-[0.03] z-0 overflow-hidden flex justify-center">
+            <span class="font-display font-bold text-[14vw] leading-none text-white whitespace-nowrap">VANTAGENS</span>
+        </div>
+
+        <!-- Animated Background decorative paths -->
+        <svg class="absolute top-0 right-0 w-full h-full opacity-[0.04] pointer-events-none stroke-white" fill="none"
+            viewBox="0 0 1000 1000" preserveAspectRatio="none">
+            <path d="M0,0 C300,500 700,500 1000,1000" stroke-width="2" vector-effect="non-scaling-stroke">
+                <animate attributeName="stroke-dasharray" values="0, 1000; 1000, 0" dur="10s"
+                    repeatCount="indefinite" />
+            </path>
+        </svg>
+
+        <div class="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 relative z-10">
+
+            <div class="mb-10 md:mb-12 reveal-up flex flex-col items-center text-center">
+                <div class="inline-flex items-center gap-3 mb-4">
+                    <span class="w-2 h-2 bg-primary-500 rounded-full animate-ping"></span>
+                    <span class="w-2 h-2 bg-primary-500 rounded-full absolute"></span>
+                    <span class="text-xs font-mono uppercase tracking-[0.2em] text-primary-400">Por que escolher a
+                        iGreen</span>
+                </div>
+                <h2 class="font-display text-3xl md:text-5xl font-medium tracking-tight text-white max-w-3xl mb-4">
+                    Por que assinar com a iGreen?</h2>
+                <p class="text-base md:text-lg text-stone-400 max-w-2xl font-light leading-relaxed">
+                    Assine e receba desconto todo mês direto na sua fatura — <strong
+                        class="text-stone-200 font-medium">sem sair de casa</strong>.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 auto-rows-auto md:auto-rows-[260px] gap-4 md:gap-6">
+
+                <!-- Card 1: Desconto Garantido (Large, Green Gradient) -->
+                <div
+                    class="col-span-1 md:col-span-8 rounded-2xl overflow-hidden relative group reveal-up delay-100 shadow-xl border border-stone-200/40 cursor-crosshair h-fit min-h-[250px] md:h-full">
+                    <div class="absolute inset-0 bg-gradient-to-br from-primary-400 via-primary-500 to-primary-700">
+                    </div>
+
+                    <!-- Simplified static orb for better performance -->
+                    <div
+                        class="absolute -top-[20%] -right-[10%] w-[60%] h-[120%] rounded-full bg-gradient-to-bl from-white/20 to-transparent pointer-events-none opacity-50">
+                    </div>
+
+                    <div class="relative z-10 p-6 md:p-8 h-full flex flex-col justify-between"
+                        onmousemove="this.parentElement.style.setProperty('--mouse-x', event.clientX - this.getBoundingClientRect().left + 'px'); this.parentElement.style.setProperty('--mouse-y', event.clientY - this.getBoundingClientRect().top + 'px');">
+
+                        <!-- Simple hover glow for desktop -->
+                        <div class="hidden md:block absolute -inset-2 opacity-0 group-hover:opacity-100 transition duration-500 z-0 pointer-events-none"
+                            style="background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.1), transparent 50%);">
+                        </div>
+
+                        <div class="relative z-10 mb-4">
+                            <div
+                                class="flex-shrink-0 w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/30 shadow-lg shadow-black/5">
+                                <iconify-icon icon="solar:wallet-money-bold-duotone"
+                                    class="text-3xl drop-shadow-sm pointer-events-none"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="max-w-md relative z-10 mt-auto">
+                            <h3 class="font-display text-2xl md:text-3xl font-medium text-white mb-2 leading-tight">
+                                Desconto garantido todo mês
+                            </h3>
+                            <p class="text-primary-50 text-base leading-relaxed font-light">Visível já na
+                                primeira fatura. A economia que você sente na prática, todos os meses.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Zero Burocracia (dark, subtle border) -->
+                <div class="col-span-1 md:col-span-4 rounded-2xl relative reveal-up delay-200 h-fit min-h-[250px] md:h-full transition-transform duration-500 group border border-stone-800 overflow-hidden bg-stone-900/50 hover:bg-stone-800/50 hover:-translate-y-1 flashlight-card"
+                    onmousemove="this.style.setProperty('--mouse-x', event.clientX - this.getBoundingClientRect().left + 'px'); this.style.setProperty('--mouse-y', event.clientY - this.getBoundingClientRect().top + 'px');">
+                    <!-- Dotted grid texture dark -->
+                    <div
+                        class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'2\' cy=\'2\' r=\'1\' fill=\'%23fff\' opacity=\'0.04\'/%3E%3C/svg%3E')] pointer-events-none mix-blend-screen">
+                    </div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-stone-800/40 to-transparent pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+
+                    <div class="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div
+                                class="flex-shrink-0 w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center text-primary-400 shadow-sm border border-stone-700 transition-transform duration-500 group-hover:scale-105">
+                                <iconify-icon icon="solar:document-add-bold-duotone"
+                                    class="text-3xl pointer-events-none"></iconify-icon>
+                            </div>
+                            <h3 class="font-display text-2xl lg:text-3xl font-medium text-white leading-tight">Zero
+                                burocracia</h3>
+                        </div>
+                        <div>
+                            <p class="text-stone-400 text-base leading-relaxed font-light">Adesão 100% online, simples e
+                                rápida, sem visita técnica na sua casa.</p>
+                            <!-- Animated line -->
+                            <div class="h-[2px] w-full bg-stone-800 mt-6 overflow-hidden rounded-full">
+                                <div
+                                    class="h-full bg-primary-500 w-0 group-hover:w-full transition-all duration-700 ease-out">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Energia Renovável (dark) -->
+                <div class="col-span-1 md:col-span-4 rounded-2xl relative reveal-up delay-300 h-fit min-h-[250px] md:h-full transition-transform duration-500 group border border-stone-800 overflow-hidden bg-stone-900/50 hover:bg-stone-800/50 hover:-translate-y-1 flashlight-card"
+                    onmousemove="this.style.setProperty('--mouse-x', event.clientX - this.getBoundingClientRect().left + 'px'); this.style.setProperty('--mouse-y', event.clientY - this.getBoundingClientRect().top + 'px');">
+                    <!-- Dotted grid texture dark -->
+                    <div
+                        class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'2\' cy=\'2\' r=\'1\' fill=\'%23fff\' opacity=\'0.04\'/%3E%3C/svg%3E')] pointer-events-none mix-blend-screen">
+                    </div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-stone-800/40 to-transparent pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
+
+                    <div class="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div
+                                class="flex-shrink-0 w-14 h-14 bg-stone-800 rounded-2xl flex items-center justify-center shadow-sm border border-stone-700 transition-transform duration-500 group-hover:scale-105">
+                                <iconify-icon icon="solar:leaf-bold-duotone"
+                                    class="text-3xl text-primary-400 pointer-events-none"></iconify-icon>
+                            </div>
+                            <h3 class="font-display text-2xl lg:text-3xl font-medium text-white leading-tight">
+                                Energia renovável</h3>
+                        </div>
+                        <div>
+                            <p class="text-stone-400 text-base leading-relaxed font-light">Consumo inteligente de
+                                energia limpa. Você economiza fazendo o bem para o planeta.</p>
+                            <!-- Animated line -->
+                            <div class="h-[2px] w-full bg-stone-800 mt-6 overflow-hidden rounded-full">
+                                <div
+                                    class="h-full bg-primary-500 w-0 group-hover:w-full transition-all duration-700 ease-out delay-100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Sem Riscos (Large, Dark Mode Flashlight) -->
+                <div
+                    class="col-span-1 md:col-span-8 rounded-2xl overflow-hidden relative group reveal-up delay-400 cursor-crosshair h-fit min-h-[250px] md:h-full">
+                    <div class="absolute inset-0 bg-stone-900 z-0"></div>
+                    <div
+                        class="hidden md:block absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg viewBox=\\'0 0 200 200\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Cfilter id=\\'noiseFilter\\'%3E%3CfeTurbulence type=\\'fractalNoise\\' baseFrequency=\\'0.6\\' numOctaves=\\'3\\' stitchTiles=\\'stitch\\'/%3E%3C/filter%3E%3Crect width=\\'100%25\\' height=\\'100%25\\' filter=\\'url(%23noiseFilter)\\'/%3E%3C/svg%3E')] opacity-20 mix-blend-overlay pointer-events-none">
+                    </div>
+
+                    <div class="relative z-10 p-6 md:p-8 h-full flex flex-col justify-between bg-black/40 backdrop-blur-[2px] border border-stone-800"
+                        onmousemove="this.parentElement.style.setProperty('--mouse-x', event.clientX - this.getBoundingClientRect().left + 'px'); this.parentElement.style.setProperty('--mouse-y', event.clientY - this.getBoundingClientRect().top + 'px');">
+
+                        <div class="flex justify-between items-start relative z-10 mb-4">
+                            <div
+                                class="flex-shrink-0 w-14 h-14 bg-white/5 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 shadow-lg transition-transform duration-500 group-hover:scale-105">
+                                <iconify-icon icon="solar:shield-check-bold-duotone"
+                                    class="text-3xl text-primary-400 group-hover:animate-[bounce_2s_infinite] pointer-events-none"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 relative z-10 mt-auto">
+                            <div class="max-w-xl">
+                                <h3 class="font-display text-2xl md:text-3xl font-medium text-white mb-2 leading-tight">
+                                    Sem riscos
+                                </h3>
+                                <p class="text-stone-400 text-base leading-relaxed font-light">A sua
+                                    distribuidora de energia continua exatamente a mesma. Nada muda na sua estrutura,
+                                    apenas a chegada dos benefícios na sua conta.</p>
+                            </div>
+                            <a href="#calculator-panel" id="btn-scroll-calc-2"
+                                class="btn-beam p-[2px] w-fit flex-shrink-0 h-14 md:h-16 group inline-flex cursor-pointer rounded-full relative z-20 mt-4 md:mt-0">
+                                <div
+                                    class="btn-beam-content rounded-full font-medium tracking-wide flex justify-center items-center text-sm md:text-base px-6 md:px-8 gap-3 overflow-hidden relative h-full w-full whitespace-nowrap">
+                                    <div
+                                        class="absolute inset-0 bg-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    </div>
+                                    <span>Economizar agora</span>
+                                    <iconify-icon icon="solar:arrow-right-linear"
+                                        class="flex-shrink-0 group-hover:translate-x-1 transition-transform text-lg text-primary-400 relative z-10"></iconify-icon>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        </div>
+    </section>
+
+    <!-- COMO FUNCIONA Section -->
+    <section id="como-funciona"
+        class="pt-[160px] md:pt-24 pb-20 md:pb-24 relative bg-[#EAEAE5] z-30 shadow-[0_-30px_60px_rgba(0,0,0,0.15)]">
+
+        <!-- Background Wrapper to prevent overflow without breaking sticky -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <!-- 1. Background Grid -->
+            <div class="absolute inset-0 opacity-30"
+                style="background-size: 40px 40px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);">
+            </div>
+
+            <!-- 2. Floating Luminous Orbs -->
+            <div
+                class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary-300/20 rounded-full blur-[100px] animate-[float_12s_ease-in-out_infinite]">
+            </div>
+            <div
+                class="absolute bottom-[20%] left-[-10%] w-[400px] h-[400px] bg-blue-300/15 rounded-full blur-[100px] animate-[float_15s_ease-in-out_infinite_reverse]">
+            </div>
+        </div>
+
+        <style>
+            @keyframes float {
+
+                0%,
+                100% {
+                    transform: translateY(0) scale(1);
+                }
+
+                50% {
+                    transform: translateY(-40px) scale(1.05);
+                }
+            }
+
+            @keyframes runningLight {
+                0% {
+                    top: -20%;
+                    opacity: 0;
+                }
+
+                20% {
+                    opacity: 1;
+                    height: 30%;
+                }
+
+                80% {
+                    opacity: 1;
+                    height: 15%;
+                }
+
+                100% {
+                    top: 110%;
+                    opacity: 0;
+                }
+            }
+
+            @keyframes pulse-ring {
+                0% {
+                    transform: scale(0.8);
+                    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+                }
+
+                70% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+                }
+
+                100% {
+                    transform: scale(0.8);
+                    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+                }
+            }
+
+            .timeline-marker-pulse {
+                box-shadow: 0 0 0 4px #EAEAE5, 0 4px 12px rgba(34, 197, 94, 0.2);
+            }
+
+            .glass-card {
+                background: rgba(255, 255, 255, 0.4);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.6);
+            }
+
+            .flashlight-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(34, 197, 94, 0.08), transparent 40%);
+                opacity: 0;
+                transition: opacity 0.5s;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .flashlight-card:hover::before {
+                opacity: 1;
+            }
+        </style>
+
+        <div class="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+
+                <!-- Left Sticky Column -->
+                <div class="lg:col-span-4 xl:col-span-4 relative">
+                    <div class="sticky top-40 flex flex-col items-start pr-0 lg:pr-8 reveal-up">
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 backdrop-blur-md text-stone-700 text-sm font-medium mb-6 border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
+                            <iconify-icon icon="solar:info-circle-bold-duotone"
+                                class="text-primary-500 text-lg"></iconify-icon>
+                            Como Funciona
+                        </div>
+                        <h2
+                            class="font-display text-4xl md:text-5xl lg:text-5xl font-semibold text-stone-900 mb-6 tracking-tight leading-tight lg:min-w-[320px]">
+                            Simples assim,<br>
+                            <span class="text-primary-600">4 passos</span> para economizar.
+                        </h2>
+                        <p class="text-stone-500 text-base md:text-lg leading-relaxed font-light mb-10">
+                            Conectamos sua conta de energia a uma fazenda solar compartilhada. Todo o processo é
+                            100% digital, rápido e sem necessidade de instalação elétrica ou obras.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Column (Vertical Timeline) -->
+                <div class="lg:col-span-8 xl:col-span-8 relative">
+                    <!-- Vertical Line (Left aligned) -->
+                    <div
+                        class="absolute left-[24px] md:left-[36px] top-12 bottom-12 w-[2px] bg-stone-200/60 -translate-x-1/2 rounded-full overflow-hidden shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+                        <div
+                            class="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-transparent via-primary-400 to-primary-500 opacity-90 animate-[runningLight_5s_cubic-bezier(0.4,0,0.2,1)_infinite] shadow-[0_0_20px_rgba(34,197,94,0.8)] filter blur-[1px]">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 md:space-y-4 relative w-full pt-4">
+
+                        <!-- Step 1 -->
+                        <div class="relative group reveal-up flex w-full">
+                            <!-- Left Marker -->
+                            <div
+                                class="w-[48px] md:w-[72px] shrink-0 flex justify-center items-center relative z-20 pb-4">
+                                <div
+                                    class="absolute w-10 h-10 rounded-full border border-primary-500/30 opacity-0 group-hover:opacity-100 group-hover:animate-[pulse-ring_2s_infinite] transition-opacity duration-500">
+                                </div>
+                                <div
+                                    class="w-4 h-4 rounded-full bg-stone-300 timeline-marker-pulse border-[3px] border-white transition-all duration-500 group-hover:scale-125 group-hover:bg-primary-500 group-hover:border-primary-100">
+                                </div>
+                            </div>
+
+                            <!-- Card -->
+                            <div class="flex-1 pb-4">
+                                <div class="glass-card flashlight-card p-6 md:p-8 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(34,197,94,0.1)] transition-all relative overflow-hidden group-hover:-translate-y-2 duration-500"
+                                    onmousemove="this.style.setProperty('--mouse-x', (event.clientX - this.getBoundingClientRect().left) + 'px'); this.style.setProperty('--mouse-y', (event.clientY - this.getBoundingClientRect().top) + 'px');">
+                                    <div class="relative z-10 flex flex-col sm:flex-row gap-6 items-start">
+                                        <div
+                                            class="w-14 h-14 rounded-2xl bg-white text-stone-600 group-hover:text-primary-500 flex items-center justify-center border border-stone-100 shadow-sm flex-shrink-0 transition-colors duration-500 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                                            <iconify-icon icon="solar:user-id-bold-duotone"
+                                                class="text-2xl"></iconify-icon>
+                                        </div>
+                                        <div>
+                                            <div class="mb-3">
+                                                <span
+                                                    class="text-primary-600 font-bold text-[10px] tracking-widest uppercase bg-primary-50/80 px-3 py-1.5 rounded-full border border-primary-100/50">Passo
+                                                    1</span>
+                                            </div>
+                                            <h3
+                                                class="font-display text-2xl font-semibold text-stone-900 mb-3 leading-tight tracking-tight">
+                                                Você se cadastra</h3>
+                                            <p class="text-stone-500 text-base leading-relaxed font-light">Informe seus
+                                                dados e o valor médio da sua conta de energia. Nosso sistema já inicia a
+                                                análise automaticamente.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="relative group reveal-up flex w-full delay-100">
+                            <!-- Left Marker -->
+                            <div
+                                class="w-[48px] md:w-[72px] shrink-0 flex justify-center items-center relative z-20 pb-4">
+                                <div
+                                    class="absolute w-10 h-10 rounded-full border border-primary-500/30 opacity-0 group-hover:opacity-100 group-hover:animate-[pulse-ring_2s_infinite] transition-opacity duration-500">
+                                </div>
+                                <div
+                                    class="w-4 h-4 rounded-full bg-stone-300 timeline-marker-pulse border-[3px] border-white transition-all duration-500 group-hover:scale-125 group-hover:bg-primary-500 group-hover:border-primary-100">
+                                </div>
+                            </div>
+
+                            <!-- Card -->
+                            <div class="flex-1 pb-4">
+                                <div class="glass-card flashlight-card p-6 md:p-8 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(34,197,94,0.1)] transition-all relative overflow-hidden group-hover:-translate-y-2 duration-500"
+                                    onmousemove="this.style.setProperty('--mouse-x', (event.clientX - this.getBoundingClientRect().left) + 'px'); this.style.setProperty('--mouse-y', (event.clientY - this.getBoundingClientRect().top) + 'px');">
+                                    <div class="relative z-10 flex flex-col sm:flex-row gap-6 items-start">
+                                        <div
+                                            class="w-14 h-14 rounded-2xl bg-white text-stone-600 group-hover:text-primary-500 flex items-center justify-center border border-stone-100 shadow-sm flex-shrink-0 transition-colors duration-500 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                                            <iconify-icon icon="solar:magnifer-bold-duotone"
+                                                class="text-2xl"></iconify-icon>
+                                        </div>
+                                        <div>
+                                            <div class="mb-3">
+                                                <span
+                                                    class="text-primary-600 font-bold text-[10px] tracking-widest uppercase bg-primary-50/80 px-3 py-1.5 rounded-full border border-primary-100/50">Passo
+                                                    2</span>
+                                            </div>
+                                            <h3
+                                                class="font-display text-2xl font-semibold text-stone-900 mb-3 leading-tight tracking-tight">
+                                                Analisamos seu perfil</h3>
+                                            <p class="text-stone-500 text-base leading-relaxed font-light">Verificamos
+                                                sua região, concessionária e disponibilidade de geração solar para
+                                                garantir o melhor desconto.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="relative group reveal-up flex w-full delay-200">
+                            <!-- Left Marker -->
+                            <div
+                                class="w-[48px] md:w-[72px] shrink-0 flex justify-center items-center relative z-20 pb-4">
+                                <div
+                                    class="absolute w-10 h-10 rounded-full border border-primary-500/30 opacity-0 group-hover:opacity-100 group-hover:animate-[pulse-ring_2s_infinite] transition-opacity duration-500">
+                                </div>
+                                <div
+                                    class="w-4 h-4 rounded-full bg-stone-300 timeline-marker-pulse border-[3px] border-white transition-all duration-500 group-hover:scale-125 group-hover:bg-primary-500 group-hover:border-primary-100">
+                                </div>
+                            </div>
+
+                            <!-- Card -->
+                            <div class="flex-1 pb-4">
+                                <div class="glass-card flashlight-card p-6 md:p-8 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(34,197,94,0.1)] transition-all relative overflow-hidden group-hover:-translate-y-2 duration-500"
+                                    onmousemove="this.style.setProperty('--mouse-x', (event.clientX - this.getBoundingClientRect().left) + 'px'); this.style.setProperty('--mouse-y', (event.clientY - this.getBoundingClientRect().top) + 'px');">
+                                    <div class="relative z-10 flex flex-col sm:flex-row gap-6 items-start">
+                                        <div
+                                            class="w-14 h-14 rounded-2xl bg-white text-stone-600 group-hover:text-primary-500 flex items-center justify-center border border-stone-100 shadow-sm flex-shrink-0 transition-colors duration-500 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                                            <iconify-icon icon="solar:smartphone-update-bold-duotone"
+                                                class="text-2xl"></iconify-icon>
+                                        </div>
+                                        <div>
+                                            <div class="mb-3">
+                                                <span
+                                                    class="text-primary-600 font-bold text-[10px] tracking-widest uppercase bg-primary-50/80 px-3 py-1.5 rounded-full border border-primary-100/50">Passo
+                                                    3</span>
+                                            </div>
+                                            <h3
+                                                class="font-display text-2xl font-semibold text-stone-900 mb-3 leading-tight tracking-tight">
+                                                Adesão digital</h3>
+                                            <p class="text-stone-500 text-base leading-relaxed font-light">A assinatura
+                                                é feita online e leva apenas alguns minutos. Sem papelada, sem
+                                                instalação e sem atritos.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="relative group reveal-up flex w-full delay-300">
+                            <!-- Left Marker -->
+                            <div
+                                class="w-[48px] md:w-[72px] shrink-0 flex justify-center items-center relative z-20 pb-4">
+                                <div
+                                    class="absolute w-10 h-10 rounded-full border border-primary-500/30 opacity-0 group-hover:opacity-100 group-hover:animate-[pulse-ring_2s_infinite] transition-opacity duration-500">
+                                </div>
+                                <div
+                                    class="w-4 h-4 rounded-full bg-stone-300 timeline-marker-pulse border-[3px] border-white transition-all duration-500 group-hover:scale-125 group-hover:bg-primary-500 group-hover:border-primary-100">
+                                </div>
+                            </div>
+
+                            <!-- Card -->
+                            <div class="flex-1 pb-4">
+                                <div class="glass-card flashlight-card p-6 md:p-8 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_50px_-10px_rgba(34,197,94,0.1)] transition-all relative overflow-hidden group-hover:-translate-y-2 duration-500"
+                                    onmousemove="this.style.setProperty('--mouse-x', (event.clientX - this.getBoundingClientRect().left) + 'px'); this.style.setProperty('--mouse-y', (event.clientY - this.getBoundingClientRect().top) + 'px');">
+                                    <div class="relative z-10 flex flex-col sm:flex-row gap-6 items-start">
+                                        <div
+                                            class="relative w-14 h-14 rounded-2xl bg-white text-stone-600 group-hover:text-primary-500 flex items-center justify-center border border-stone-100 shadow-sm flex-shrink-0 transition-colors duration-500 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                                            <iconify-icon icon="solar:bill-check-bold-duotone"
+                                                class="text-2xl"></iconify-icon>
+                                            <div
+                                                class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 border-[3px] border-white shadow-sm">
+                                                <iconify-icon icon="solar:check-read-linear"
+                                                    class="text-white text-[10px]"></iconify-icon>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="mb-3">
+                                                <span
+                                                    class="text-primary-600 font-bold text-[10px] tracking-widest uppercase bg-primary-50/80 px-3 py-1.5 rounded-full border border-primary-100/50">Passo
+                                                    4</span>
+                                            </div>
+                                            <h3
+                                                class="font-display text-2xl font-semibold text-stone-900 mb-3 leading-tight tracking-tight">
+                                                Desconto na conta</h3>
+                                            <p class="text-stone-500 text-base leading-relaxed font-light">Em até 90 dias após a aprovação, você já começa a receber sua energia com desconto diretamente na fatura da concessionária.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. TESTIMONIALS SECTION — Cinematic Split Layout -->
+    <section id="depoimentos" class="relative overflow-hidden bg-[#EAEAE5] border-t border-stone-300">
+
+        <style>
+            /* ── DS Variables ── */
+            :root {
+                --depoi-bg: #EAEAE5;
+                --depoi-border: #d6d3d1;
+                /* stone-300 */
+                --depoi-primary: #16a34a;
+                --depoi-text: #1c1917;
+                --depoi-muted: #78716c;
+            }
+
+            /* ── Left panel ── */
+            .depoi-left {
+                width: 420px;
+                flex-shrink: 0;
+                padding: 4rem 3rem 4rem clamp(1.5rem, 6vw, 6rem);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                gap: 2rem;
+                border-right: 1px solid var(--depoi-border);
+                position: relative;
+                z-index: 2;
+                background: var(--depoi-bg);
+            }
+
+            /* Animated left-column accent line (DS scroll-line pattern) */
+            .depoi-left::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: linear-gradient(to bottom, transparent, var(--depoi-primary), transparent);
+                opacity: 0;
+                animation: depoi-line-pulse 4s ease-in-out infinite;
+            }
+
+            @keyframes depoi-line-pulse {
+
+                0%,
+                100% {
+                    opacity: 0;
+                    transform: scaleY(0.3);
+                }
+
+                50% {
+                    opacity: 0.6;
+                    transform: scaleY(1);
+                }
+            }
+
+            /* ── Kicker badge ── */
+            .depoi-kicker {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 1.25rem;
+            }
+
+            .depoi-kicker .ping-dot {
+                position: relative;
+                width: 8px;
+                height: 8px;
+            }
+
+            .depoi-kicker .ping-dot::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                background: var(--depoi-primary);
+                animation: depoi-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+            }
+
+            .depoi-kicker .ping-dot::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                background: var(--depoi-primary);
+            }
+
+            @keyframes depoi-ping {
+
+                75%,
+                100% {
+                    transform: scale(2.2);
+                    opacity: 0;
+                }
+            }
+
+            .depoi-kicker span {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 10px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--depoi-primary);
+            }
+
+            /* ── Stat block ── */
+            .depoi-stat {
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--depoi-border);
+            }
+
+            .depoi-stat-num {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 3.5rem;
+                font-weight: 700;
+                line-height: 1;
+                color: var(--depoi-text);
+                letter-spacing: -0.04em;
+            }
+
+            .depoi-stat-num span {
+                color: var(--depoi-primary);
+            }
+
+            .depoi-stat-label {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 9px;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                color: var(--depoi-muted);
+                margin-top: 6px;
+                line-height: 1.6;
+            }
+
+            /* ── Scroll animation ── */
+            @keyframes cinematic-scroll {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+
+            .depoi-scroll-track {
+                display: flex;
+                align-items: stretch;
+                width: max-content;
+                animation: cinematic-scroll 75s linear infinite;
+                will-change: transform;
+            }
+
+            .depoi-scroll-track:hover {
+                animation-play-state: paused;
+            }
+
+            /* ── Quote item ── */
+            .depoi-item {
+                width: 500px;
+                flex-shrink: 0;
+                padding: 3.5rem 3.5rem 3rem 3.5rem;
+                border-right: 1px solid var(--depoi-border);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                min-height: 360px;
+                height: 100%;
+                cursor: default;
+                transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* Top accent bar — appears on hover */
+            .depoi-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(to right, var(--depoi-primary), transparent);
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .depoi-item:hover::before {
+                transform: scaleX(1);
+            }
+
+            .depoi-item:hover {
+                background: #ffffff;
+                box-shadow: 0 20px 60px rgba(34, 197, 94, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+            }
+
+            /* Ref label */
+            .depoi-item .ref-label {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 9px;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+                color: var(--depoi-primary);
+                margin-bottom: 1.75rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .depoi-item .ref-label::before {
+                content: '';
+                display: inline-block;
+                width: 20px;
+                height: 1px;
+                background: var(--depoi-primary);
+                opacity: 0.5;
+            }
+
+            /* Quote text — Space Grotesk, DS display font */
+            .depoi-item .quote-text {
+                font-family: 'Space Grotesk', 'Inter', sans-serif;
+                font-size: clamp(1.45rem, 2.5vw, 2.35rem);
+                font-weight: 400;
+                line-height: 1.3;
+                color: var(--depoi-text);
+                letter-spacing: -0.025em;
+                flex: 1;
+                margin-bottom: 2.25rem;
+            }
+
+            .depoi-item .quote-text em {
+                font-style: normal;
+                color: var(--depoi-primary);
+                font-weight: 500;
+            }
+
+            /* Opening quote mark — decorative */
+            .depoi-item .quote-text::before {
+                content: '\201C';
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 1.1em;
+                color: var(--depoi-primary);
+                opacity: 0.35;
+                margin-right: 0.05em;
+            }
+
+            .depoi-author {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding-top: 1.5rem;
+                border-top: 1px solid var(--depoi-border);
+            }
+
+            .depoi-author .avatar {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-family: 'Space Grotesk', sans-serif;
+                font-weight: 600;
+                font-size: 1.1rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                flex-shrink: 0;
+            }
+
+            /* --- Mobile Scroll Tweaks for Depoimentos --- */
+            @media (max-width: 768px) {
+                .depoi-scroll-wrap {
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                    scrollbar-width: none;
+                    /* Firefox */
+                }
+
+                .depoi-scroll-wrap::-webkit-scrollbar {
+                    display: none;
+                    /* Chrome/Safari */
+                }
+
+                .depoi-scroll-track {
+                    animation: none !important;
+                    /* Disable CSS animation, handled by JS */
+                }
+
+                .depoi-item {
+                    width: 85vw;
+                    /* Make cards fit screen nicely */
+                    min-height: 380px;
+                }
+            }
+
+            /* Avatar ring that matches DS primary */
+            .depoi-author .avatar::after {
+                content: '';
+                position: absolute;
+                inset: -2px;
+                border-radius: 10px;
+                background: linear-gradient(135deg, var(--depoi-primary), transparent);
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .depoi-item:hover .depoi-author .avatar::after {
+                opacity: 0.6;
+            }
+
+            .depoi-author .name {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--depoi-text);
+            }
+
+            .depoi-author .role {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 10px;
+                color: var(--depoi-primary);
+                letter-spacing: 0.05em;
+                margin-top: 2px;
+                opacity: 0.8;
+            }
+
+            /* Right fade mask — larger, softer */
+            .depoi-scroll-wrap::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 200px;
+                background: linear-gradient(to left, var(--depoi-bg) 30%, transparent);
+                pointer-events: none;
+                z-index: 10;
+            }
+
+            /* ── Mobile ── */
+            @media (max-width: 767px) {
+                .depoi-left {
+                    width: 100%;
+                    border-right: none;
+                    border-bottom: 1px solid var(--depoi-border);
+                    padding: 2.5rem 1.5rem 2rem;
+                }
+
+                .depoi-left::before {
+                    display: none;
+                }
+
+                .depoi-item {
+                    width: 88vw;
+                    min-height: 300px;
+                    padding: 2.25rem 1.75rem;
+                }
+
+                .depoi-item .quote-text {
+                    font-size: 1.4rem;
+                }
+            }
+        </style>
+
+        <!-- DS glow-orbs: pulsing ambient light -->
+        <div class="absolute top-[-5%] right-[10%] w-[560px] h-[560px] rounded-full pointer-events-none"
+            style="background:radial-gradient(circle, rgba(34,197,94,0.14) 0%, transparent 70%); animation: pulse-slow 8s infinite alternate;">
+        </div>
+        <div class="absolute bottom-[-10%] left-[3%] w-[400px] h-[400px] rounded-full pointer-events-none"
+            style="background:radial-gradient(circle, rgba(168,162,158,0.18) 0%, transparent 70%); animation: pulse-slow 11s 1.5s infinite alternate;">
+        </div>
+
+        <!-- Main layout -->
+        <div class="flex flex-col md:flex-row md:items-stretch relative z-10">
+
+            <!-- ── LEFT PANEL ── -->
+            <div class="depoi-left reveal-up">
+
+                <!-- Kicker -->
+                <div>
+                    <div class="depoi-kicker">
+                        <span class="ping-dot"></span>
+                        <span>Depoimentos</span>
+                    </div>
+
+                    <!-- Title -->
+                    <h2
+                        class="font-display text-[2.6rem] lg:text-[3rem] font-semibold tracking-tight text-stone-900 leading-[1.05] mb-5">
+                        O que nossos<br>clientes <span class="text-primary-500">dizem.</span>
+                    </h2>
+
+                    <!-- Description -->
+                    <p class="text-stone-500 text-sm leading-relaxed font-light" style="max-width:210px">
+                        Feedback real de quem já economiza todo mês com a iGreen — sem obra, sem complicação.
+                    </p>
+                </div>
+
+                <!-- Stat block -->
+                <div class="depoi-stat">
+                    <div class="depoi-stat-num">98<span>%</span></div>
+                    <div class="depoi-stat-label">Taxa de<br>Renovação</div>
+                </div>
+            </div>
+
+            <!-- ── RIGHT PANEL (scrolling quotes) ── -->
+            <div class="depoi-scroll-wrap flex-1 overflow-hidden relative" style="display:flex; flex-direction:column;">
+                <div class="depoi-scroll-track" style="flex:1; height:100%;">
+
+                    <!-- Quote 1 -->
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 001 // São Paulo, SP</p>
+                            <p class="quote-text">Na primeira fatura já senti a diferença. <em>28% de desconto</em> sem
+                                fazer nada — simplesmente me cadastrei.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#4ade80,#16a34a)">A</div>
+                            <div>
+                                <div class="name">Ana Paula S.</div>
+                                <div class="role">Assinante · 8 meses</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quote 2 -->
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 002 // Belo Horizonte, MG</p>
+                            <p class="quote-text">Achei que era pegadinha. Minha conta <em>caiu 28%</em> e não precisei
+                                instalar nada. Recomendo.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#60a5fa,#2563eb)">R</div>
+                            <div>
+                                <div class="name">Roberto M.</div>
+                                <div class="role">Assinante · 5 meses</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quote 3 -->
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 003 // Curitiba, PR</p>
+                            <p class="quote-text">Todo mês vem confirmado. <em>Indiquei para toda a família</em> e todos
+                                assinaram. Serviço incrível.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#86efac,#15803d)">F</div>
+                            <div>
+                                <div class="name">Fernanda L.</div>
+                                <div class="role">Assinante · 11 meses</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quote 4 -->
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 004 // Porto Alegre, RS</p>
+                            <p class="quote-text">Pago <em>28% menos</em> por mês. Sem instalar nada, sem obra —
+                                funcionou de verdade.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#fb923c,#ea580c)">C</div>
+                            <div>
+                                <div class="name">Carlos Eduardo T.</div>
+                                <div class="role">Assinante · 7 meses</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quote 5 -->
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 005 // Fortaleza, CE</p>
+                            <p class="quote-text">Rápido, sem burocracia. O desconto vem <em>todo mês, certinho.</em>
+                                Recomendo sem hesitar.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">M</div>
+                            <div>
+                                <div class="name">Mariana C.</div>
+                                <div class="role">Assinante · 3 meses</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quote 6 -->
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 006 // Recife, PE</p>
+                            <p class="quote-text">Só tenho <em>arrependimento de não ter assinado antes.</em> Resultado
+                                real, imediato.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#f472b6,#db2777)">J</div>
+                            <div>
+                                <div class="name">Juliana F.</div>
+                                <div class="role">Assinante · 6 meses</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── DUPLICATE SET for seamless loop ── -->
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 001 // São Paulo, SP</p>
+                            <p class="quote-text">Na primeira fatura já senti a diferença. <em>28% de desconto</em> sem
+                                fazer nada — simplesmente me cadastrei.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#4ade80,#16a34a)">A</div>
+                            <div>
+                                <div class="name">Ana Paula S.</div>
+                                <div class="role">Assinante · 8 meses</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 002 // Belo Horizonte, MG</p>
+                            <p class="quote-text">Achei que era pegadinha. Minha conta <em>caiu 28%</em> e não precisei
+                                instalar nada. Recomendo.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#60a5fa,#2563eb)">R</div>
+                            <div>
+                                <div class="name">Roberto M.</div>
+                                <div class="role">Assinante · 5 meses</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 003 // Curitiba, PR</p>
+                            <p class="quote-text">Todo mês vem confirmado. <em>Indiquei para toda a família</em> e todos
+                                assinaram. Serviço incrível.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#86efac,#15803d)">F</div>
+                            <div>
+                                <div class="name">Fernanda L.</div>
+                                <div class="role">Assinante · 11 meses</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 004 // Porto Alegre, RS</p>
+                            <p class="quote-text">Pago <em>20% menos</em> por mês. Sem instalar nada, sem obra —
+                                funcionou de verdade.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#fb923c,#ea580c)">C</div>
+                            <div>
+                                <div class="name">Carlos Eduardo T.</div>
+                                <div class="role">Assinante · 7 meses</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 005 // Fortaleza, CE</p>
+                            <p class="quote-text">Rápido, sem burocracia. O desconto vem <em>todo mês, certinho.</em>
+                                Recomendo sem hesitar.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">M</div>
+                            <div>
+                                <div class="name">Mariana C.</div>
+                                <div class="role">Assinante · 3 meses</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="depoi-item">
+                        <div>
+                            <p class="ref-label">Ref. 006 // Recife, PE</p>
+                            <p class="quote-text">Só tenho <em>arrependimento de não ter assinado antes.</em> Resultado
+                                real, imediato.</p>
+                        </div>
+                        <div class="depoi-author">
+                            <div class="avatar" style="background:linear-gradient(135deg,#f472b6,#db2777)">J</div>
+                            <div>
+                                <div class="name">Juliana F.</div>
+                                <div class="role">Assinante · 6 meses</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         6. DOBRA — AUTORIDADE & CONFIANÇA
+    ══════════════════════════════════════════════════════ -->
+    <section id="autoridade" class="relative bg-[#EAEAE5] border-t border-stone-300 overflow-hidden">
+
+        <style>
+            /* ── Grid background (DS ref) ── */
+            .trust-grid-bg {
+                background-size: 48px 48px;
+                background-image:
+                    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+            }
+
+            /* ── Flashlight / spotlight card (DS ref) ── */
+            .trust-card {
+                position: relative;
+                background: rgba(255, 255, 255, 0.55);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.7);
+                border-radius: 16px;
+                overflow: hidden;
+                transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.3s ease;
+                cursor: default;
+            }
+
+            .trust-card::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%),
+                        rgba(34, 197, 94, 0.12), transparent 50%);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .trust-card:hover::before {
+                opacity: 1;
+            }
+
+            .trust-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 24px 64px rgba(34, 197, 94, 0.1), 0 4px 24px rgba(0, 0, 0, 0.06);
+                border-color: rgba(34, 197, 94, 0.25);
+            }
+
+            /* Card content above the pseudo */
+            .trust-card>* {
+                position: relative;
+                z-index: 2;
+            }
+
+            /* Icon container */
+            .trust-icon-wrap {
+                width: 52px;
+                height: 52px;
+                background: linear-gradient(135deg, #16a34a, #4ade80);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);
+                transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .trust-card:hover .trust-icon-wrap {
+                transform: scale(1.08) rotate(-3deg);
+            }
+
+            /* ── Marquee ticker ── */
+            @keyframes trust-marquee {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+
+            .trust-marquee-track {
+                display: flex;
+                width: max-content;
+                animation: trust-marquee 35s linear infinite;
+            }
+
+            /* ── Outlined big text background ── */
+            .trust-outline-text {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: clamp(6rem, 15vw, 14rem);
+                font-weight: 700;
+                letter-spacing: -0.04em;
+                -webkit-text-stroke: 1px rgba(0, 0, 0, 0.08);
+                color: transparent;
+                white-space: nowrap;
+                line-height: 1;
+                user-select: none;
+                pointer-events: none;
+            }
+
+            /* ── Counter number ── */
+            .trust-stat-num {
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 3.5rem;
+                font-weight: 700;
+                line-height: 1;
+                letter-spacing: -0.04em;
+                color: #1c1917;
+            }
+
+            .trust-stat-num .accent {
+                color: #16a34a;
+            }
+        </style>
+
+        <!-- Grid background layer -->
+        <div class="absolute inset-0 trust-grid-bg pointer-events-none"></div>
+
+        <!-- Glow orbs (DS pulse-slow) -->
+        <div class="absolute top-[-8%] right-[5%] w-[600px] h-[600px] rounded-full pointer-events-none"
+            style="background:radial-gradient(circle,rgba(34,197,94,0.13) 0%,transparent 70%); animation:pulse-slow 9s infinite alternate;">
+        </div>
+        <div class="absolute bottom-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full pointer-events-none"
+            style="background:radial-gradient(circle,rgba(168,162,158,0.16) 0%,transparent 70%); animation:pulse-slow 12s 2s infinite alternate;">
+        </div>
+
+        <!-- Decorative outlined text (background layer) -->
+        <div class="absolute bottom-0 left-0 right-0 overflow-hidden pointer-events-none select-none flex items-end opacity-100"
+            style="z-index:0;">
+            <div class="trust-outline-text px-8 pb-4">CONFIANÇA&nbsp;&nbsp;&nbsp;CONFIANÇA&nbsp;&nbsp;&nbsp;</div>
+        </div>
+
+        <!-- ── MAIN CONTENT ── -->
+        <div class="relative z-10 max-w-[1440px] mx-auto">
+
+            <!-- HEADER ROW -->
+            <div class="grid grid-cols-1 md:grid-cols-12 border-b border-stone-300">
+
+                <!-- Left: Section label -->
+                <div
+                    class="md:col-span-3 px-8 md:px-12 py-12 border-b md:border-b-0 md:border-r border-stone-300 flex flex-col justify-between gap-6">
+                    <div>
+                        <div class="flex items-center gap-2 mb-4 reveal-up">
+                            <span class="w-2 h-2 bg-primary-500 rounded-full animate-ping absolute"></span>
+                            <span class="w-2 h-2 bg-primary-500 rounded-full"></span>
+                            <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-primary-600 ml-3">06 /
+                                Credenciais</span>
+                        </div>
+                        <h2 class="font-display text-4xl md:text-5xl font-semibold tracking-tighter text-stone-900 leading-[1.05] reveal-up"
+                            style="transition-delay:0.1s">
+                            Autoridade e confiança<br>no <span class="text-primary-500">mercado.</span>
+                        </h2>
+                    </div>
+                    <p class="text-stone-500 text-sm font-light leading-relaxed max-w-[240px] reveal-up"
+                        style="transition-delay:0.2s">
+                        Operamos dentro de um ecossistema 100% regulamentado. Sua assinatura é sustentada por
+                        certificações reais.
+                    </p>
+                </div>
+
+                <!-- Right: Stats row -->
+                <div class="md:col-span-9 grid grid-cols-2 md:grid-cols-3">
+
+                    <div class="p-8 md:p-10 border-b md:border-b-0 border-r border-stone-300 flex flex-col justify-between gap-4 reveal-up"
+                        style="transition-delay:0.15s">
+                        <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-stone-400">Clientes
+                            ativos</span>
+                        <div>
+                            <div class="trust-stat-num">+4<span class="accent">k</span></div>
+                            <div class="font-mono text-[9px] uppercase tracking-widest text-stone-400 mt-2">Em 20 estados parceiros</div>
+                        </div>
+                    </div>
+
+                    <div class="p-8 md:p-10 border-b md:border-b-0 border-r border-stone-300 flex flex-col justify-between gap-4 reveal-up"
+                        style="transition-delay:0.2s">
+                        <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-stone-400">Desconto
+                            de até</span>
+                        <div>
+                            <div class="trust-stat-num">28<span class="accent">%</span></div>
+                            <div class="font-mono text-[9px] uppercase tracking-widest text-stone-400 mt-2">No valor da energia</div>
+                        </div>
+                    </div>
+
+                    <div class="p-8 md:p-10 col-span-2 md:col-span-1 flex flex-col justify-between gap-4 reveal-up"
+                        style="transition-delay:0.25s">
+                        <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-stone-400">Taxa de
+                            renovação</span>
+                        <div>
+                            <div class="trust-stat-num">98<span class="accent">%</span></div>
+                            <div class="font-mono text-[9px] uppercase tracking-widest text-stone-400 mt-2">Clientes que
+                                renovam</div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /HEADER ROW -->
+
+            <!-- CARDS GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-b border-stone-300">
+
+                <!-- Card 1: CNPJ -->
+                <div class="trust-card m-5 p-7 flex flex-col gap-5 reveal-up" style="transition-delay:0.1s"
+                    onmousemove="this.style.setProperty('--mx',event.offsetX+'px'); this.style.setProperty('--my',event.offsetY+'px')">
+                    <div class="trust-icon-wrap">
+                        <iconify-icon icon="solar:document-bold-duotone" class="text-2xl text-white"></iconify-icon>
+                    </div>
+                    <div>
+                        <div class="font-mono text-[9px] uppercase tracking-[0.18em] text-primary-600 mb-2">Regularidade
+                            jurídica</div>
+                        <h3 class="font-display text-xl font-semibold text-stone-900 tracking-tight mb-3">Empresa
+                            regularizada</h3>
+                        <p class="text-stone-500 text-sm leading-relaxed">CNPJ ativo e operação 100% dentro dos marcos
+                            legais do setor elétrico brasileiro.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-stone-200/80 flex justify-between items-center">
+                        <span
+                            class="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-primary-600">
+                            <iconify-icon icon="solar:verified-check-bold" class="text-sm"></iconify-icon>
+                            CNPJ Ativo
+                        </span>
+                        <button onclick="copyCNPJ()"
+                            class="text-[10px] font-mono uppercase tracking-widest text-stone-400 hover:text-primary-500 transition-colors flex items-center gap-1 group/copy">
+                            <span id="cnpj-text">55.210.200/0001-60</span>
+                            <iconify-icon icon="solar:copy-bold-duotone"
+                                class="text-sm group-hover/copy:scale-110 transition-transform"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: ANEEL -->
+                <div class="trust-card m-5 p-7 flex flex-col gap-5 reveal-up" style="transition-delay:0.2s"
+                    onmousemove="this.style.setProperty('--mx',event.offsetX+'px'); this.style.setProperty('--my',event.offsetY+'px')">
+                    <div class="trust-icon-wrap" style="background:linear-gradient(135deg,#15803d,#166534)">
+                        <iconify-icon icon="solar:sun-bold-duotone" class="text-2xl text-white"></iconify-icon>
+                    </div>
+                    <div>
+                        <div class="font-mono text-[9px] uppercase tracking-[0.18em] text-primary-600 mb-2">Certificação
+                            técnica</div>
+                        <h3 class="font-display text-xl font-semibold text-stone-900 tracking-tight mb-3">Usinas
+                            certificadas</h3>
+                        <p class="text-stone-500 text-sm leading-relaxed">Todas as nossas usinas são homologadas e
+                            auditadas pela ANEEL — Agência Nacional de Energia Elétrica.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-stone-200/80">
+                        <span
+                            class="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-primary-600">
+                            <iconify-icon icon="solar:verified-check-bold" class="text-sm"></iconify-icon>
+                            ANEEL Homologada
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Dashboard -->
+                <div class="trust-card m-5 p-7 flex flex-col gap-5 reveal-up" style="transition-delay:0.3s"
+                    onmousemove="this.style.setProperty('--mx',event.offsetX+'px'); this.style.setProperty('--my',event.offsetY+'px')">
+                    <div class="trust-icon-wrap" style="background:linear-gradient(135deg,#0369a1,#0284c7)">
+                        <iconify-icon icon="solar:chart-square-bold-duotone" class="text-2xl text-white"></iconify-icon>
+                    </div>
+                    <div>
+                        <div class="font-mono text-[9px] uppercase tracking-[0.18em] text-primary-600 mb-2">Visibilidade
+                            total</div>
+                        <h3 class="font-display text-xl font-semibold text-stone-900 tracking-tight mb-3">Transparência
+                            total</h3>
+                        <p class="text-stone-500 text-sm leading-relaxed">Dashboard de métricas em tempo real. Acompanhe
+                            cada desconto, cada kWh e cada fatura no seu painel.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-stone-200/80">
+                        <span
+                            class="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-primary-600">
+                            <span class="w-1.5 h-1.5 bg-primary-500 rounded-full animate-pulse"></span>
+                            Dados em Tempo Real
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card 4: Suporte -->
+                <div class="trust-card m-5 p-7 flex flex-col gap-5 reveal-up" style="transition-delay:0.4s"
+                    onmousemove="this.style.setProperty('--mx',event.offsetX+'px'); this.style.setProperty('--my',event.offsetY+'px')">
+                    <div class="trust-icon-wrap" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)">
+                        <iconify-icon icon="solar:headphones-round-sound-bold-duotone"
+                            class="text-2xl text-white"></iconify-icon>
+                    </div>
+                    <div>
+                        <div class="font-mono text-[9px] uppercase tracking-[0.18em] text-primary-600 mb-2">Atendimento
+                            humano</div>
+                        <h3 class="font-display text-xl font-semibold text-stone-900 tracking-tight mb-3">Suporte
+                            dedicado</h3>
+                        <p class="text-stone-500 text-sm leading-relaxed">Equipe especializada disponível todos os dias.
+                            Atendimento via WhatsApp, e-mail e chat sem robôs.</p>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-stone-200/80">
+                        <span
+                            class="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-primary-600">
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                            Online Agora
+                        </span>
+                    </div>
+                </div>
+
+            </div><!-- /CARDS GRID -->
+
+        </div><!-- /max-w -->
+
+        <!-- MARQUEE TICKER — full width, fora do max-w -->
+        <div class="overflow-hidden py-4 border-t border-b border-stone-300 bg-stone-100/40 relative z-10">
+            <div class="trust-marquee-track whitespace-nowrap">
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">Atuação em 20 Estados</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">Até 28% de Desconto</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">Dashboard em Tempo
+                    Real</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">Suporte
+                    Dedicado</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">98% Renovação</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <!-- duplicate for seamless loop -->
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">Atuação em 20 Estados</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">Até 28% de Desconto</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">Dashboard em Tempo
+                    Real</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">Suporte
+                    Dedicado</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+                <span class="mx-6 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-400">98% Renovação</span>
+                <span class="mx-4 text-primary-500 font-mono text-xs">✦</span>
+            </div>
+        </div><!-- /MARQUEE FULL WIDTH -->
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         7. DOBRA — FAQ (PERGUNTAS FREQUENTES)
+    ══════════════════════════════════════════════════════ -->
+    <section id="faq" class="relative bg-[#EAEAE5] py-24 md:py-32 border-b border-stone-300">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-12">
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24">
+
+                <!-- FAQ Left: Sticker Title -->
+                <div class="md:col-span-4 lg:col-span-3">
+                    <div class="sticky top-32">
+                        <div class="flex items-center gap-3 mb-6 reveal-up">
+                            <span class="w-1.5 h-1.5 bg-primary-500 rounded-full"></span>
+                            <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-primary-600">07 /
+                                Suporte</span>
+                        </div>
+                        <h2 class="font-display text-4xl md:text-5xl font-semibold text-stone-900 tracking-tighter leading-tight mb-6 reveal-up"
+                            style="transition-delay:0.1s">
+                            Dúvidas<br>Frequentes.
+                        </h2>
+                        <p class="text-stone-500 text-sm font-light leading-relaxed reveal-up"
+                            style="transition-delay:0.2s">
+                            Tudo o que você precisa saber sobre sua nova forma de consumir energia.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Right: Accordion -->
+                <div class="md:col-span-8 lg:col-span-9 space-y-4">
+
+                    <style>
+                        .faq-item {
+                            border-bottom: 1px solid #d6d3d1;
+                            /* stone-300 */
+                            transition: all 0.4s ease;
+                            position: relative;
+                            overflow: hidden;
+                        }
+
+                        .faq-item::before {
+                            content: "";
+                            position: absolute;
+                            inset: 0;
+                            background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(34, 197, 94, 0.05), transparent 70%);
+                            opacity: 0;
+                            transition: opacity 0.5s;
+                            pointer-events: none;
+                        }
+
+                        #faq:hover .faq-item::before {
+                            opacity: 1;
+                        }
+
+                        .faq-trigger {
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            padding: 1.5rem 0;
+                            text-align: left;
+                            transition: color 0.3s ease;
+                        }
+
+                        .faq-trigger:hover .faq-title {
+                            color: #16a34a;
+                        }
+
+                        .faq-content {
+                            max-height: 0;
+                            overflow: hidden;
+                            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s ease;
+                        }
+
+                        .faq-item.is-open .faq-content {
+                            max-height: 500px;
+                            padding-bottom: 1.5rem;
+                        }
+
+                        .faq-icon {
+                            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                        }
+
+                        .faq-item.is-open .faq-icon {
+                            transform: rotate(45deg);
+                        }
+                    </style>
+
+                    <!-- Q1 -->
+                    <div class="faq-item group reveal-up" style="transition-delay:0.1s">
+                        <button class="faq-trigger" onclick="this.parentElement.classList.toggle('is-open')">
+                            <h3 class="faq-question font-display text-lg md:text-xl font-medium text-stone-900 pr-8">
+                                Quem
+                                pode contratar a iGreen Energy?</h3>
+                            <iconify-icon icon="solar:plus-linear"
+                                class="faq-icon text-xl text-stone-400 group-hover:text-primary-500"></iconify-icon>
+                        </button>
+                        <div class="faq-content">
+                            <p class="text-stone-500 text-sm md:text-base leading-relaxed max-w-3xl">
+                                Qualquer pessoa física ou jurídica (residências, comércios ou indústrias) atendida pela
+                                rede da Cemig (MG) ou distribuidoras parceiras. Basta ter uma conta de luz com valor
+                                médio acima de R$ 150,00.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="faq-item group reveal-up" style="transition-delay:0.15s">
+                        <button class="faq-trigger" onclick="this.parentElement.classList.toggle('is-open')">
+                            <h3 class="faq-question font-display text-lg md:text-xl font-medium text-stone-900 pr-8">
+                                Como recebo meu desconto?
+                            </h3>
+                            <iconify-icon icon="solar:plus-linear"
+                                class="faq-icon text-xl text-stone-400 group-hover:text-primary-500"></iconify-icon>
+                        </button>
+                        <div class="faq-content">
+                            <p class="text-stone-500 text-sm md:text-base leading-relaxed max-w-3xl">
+                                O desconto é aplicado diretamente na sua fatura de energia, sem nenhum custo para você. Após o cadastro e aprovação, a energia solar é compensada automaticamente na sua conta, reduzindo o valor a pagar todo mês.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="faq-item group reveal-up" style="transition-delay:0.2s">
+                        <button class="faq-trigger" onclick="this.parentElement.classList.toggle('is-open')">
+                            <h3 class="faq-question font-display text-lg md:text-xl font-medium text-stone-900 pr-8">
+                                Quem pode solicitar o desconto?
+                            </h3>
+                            <iconify-icon icon="solar:plus-linear"
+                                class="faq-icon text-xl text-stone-400 group-hover:text-primary-500"></iconify-icon>
+                        </button>
+                        <div class="faq-content">
+                            <p class="text-stone-500 text-sm md:text-base leading-relaxed max-w-3xl">
+                                O desconto incide sobre a tarifa de energia injetada pela iGreen. Na prática, você deixa
+                                de pagar o valor cheio da distribuidora e passa a pagar o valor com benefício garantido
+                                por contrato.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="faq-item group reveal-up" style="transition-delay:0.25s">
+                        <button class="faq-trigger" onclick="this.parentElement.classList.toggle('is-open')">
+                            <h3 class="faq-question font-display text-lg md:text-xl font-medium text-stone-900 pr-8">
+                                Existe custo de instalação ou mensalidade?
+                            </h3>
+                            <iconify-icon icon="solar:plus-linear"
+                                class="faq-icon text-xl text-stone-400 group-hover:text-primary-500"></iconify-icon>
+                        </button>
+                        <div class="faq-content">
+                            <p class="text-stone-500 text-sm md:text-base leading-relaxed max-w-3xl">
+                                Zero. A adesão é totalmente gratuita e não cobramos taxa de cancelamento ou fidelidade.
+                                Você é livre para sair quando quiser (respeitando apenas o aviso prévio de 90 dias
+                                exigido pela regulamentação).
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         FINAL CTA SECTION (SESSÃO 07)
+    ══════════════════════════════════════════════════════ -->
+    <section id="final-cta"
+        class="relative z-30 min-h-screen bg-stone-950 flex flex-col items-center justify-center overflow-hidden py-24">
+
+        <!-- Noise Overlay -->
+        <div
+            class="hidden md:block absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E')] opacity-[0.05] mix-blend-overlay pointer-events-none z-10">
+        </div>
+
+        <!-- Ambient Glows -->
+        <div
+            class="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-primary-900/30 rounded-full blur-[120px] mix-blend-screen animate-[float_15s_ease-in-out_infinite] pointer-events-none z-0">
+        </div>
+        <div
+            class="absolute bottom-[10%] right-[10%] w-[600px] h-[600px] bg-primary-800/20 rounded-full blur-[150px] mix-blend-screen animate-[float_12s_ease-in-out_infinite_reverse] pointer-events-none z-0">
+        </div>
+
+        <!-- 3D "Trails" using SVG -->
+        <svg class="absolute inset-0 w-full h-full opacity-30 pointer-events-none z-0 stroke-primary-500/10" fill="none"
+            viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+            <path d="M-200,500 C200,800 500,200 1200,600" stroke-width="40" stroke-linecap="round" fill="none"
+                class="blur-xl">
+                <animate attributeName="stroke-dasharray" values="0, 3000; 3000, 0" dur="20s"
+                    repeatCount="indefinite" />
+            </path>
+            <path d="M-100,200 C300,-100 800,800 1300,300" stroke-width="60" stroke-linecap="round" fill="none"
+                class="blur-2xl">
+                <animate attributeName="stroke-dasharray" values="3000, 0; 0, 3000" dur="25s"
+                    repeatCount="indefinite" />
+            </path>
+            <path d="M-200,900 C300,1000 600,-200 1200,200" stroke-width="25" stroke-linecap="round" fill="none"
+                class="blur-lg stroke-primary-400/20">
+                <animate attributeName="stroke-dasharray" values="0, 3000; 3000, 0" dur="15s"
+                    repeatCount="indefinite" />
+            </path>
+        </svg>
+
+        <!-- Particle Dust Simulation (Enhanced) -->
+        <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden mix-blend-screen opacity-60">
+            <div
+                class="w-1 h-1 rounded-full bg-primary-400 absolute top-[15%] left-[10%] animate-[float_8s_ease-in-out_infinite] opacity-50">
+            </div>
+            <div
+                class="w-2 h-2 rounded-full bg-white absolute top-[25%] left-[80%] animate-[float_12s_ease-in-out_infinite_reverse] opacity-30">
+            </div>
+            <div
+                class="w-1.5 h-1.5 rounded-full bg-primary-200 absolute top-[65%] left-[20%] animate-[float_10s_ease-in-out_infinite] opacity-40">
+            </div>
+            <div
+                class="w-1 h-1 rounded-full bg-primary-500 absolute top-[50%] left-[85%] animate-[float_6s_ease-in-out_infinite_reverse] opacity-60">
+            </div>
+            <div
+                class="w-2 h-2 rounded-full bg-primary-300 absolute bottom-[15%] left-[45%] animate-[float_14s_ease-in-out_infinite] opacity-20">
+            </div>
+            <div
+                class="w-1 h-1 rounded-full bg-white absolute bottom-[40%] right-[10%] animate-[float_9s_ease-in-out_infinite] opacity-50">
+            </div>
+            <div
+                class="w-3 h-3 rounded-full bg-primary-600 absolute top-[40%] left-[5%] blur-sm animate-[float_11s_ease-in-out_infinite] opacity-10">
+            </div>
+        </div>
+
+        <div class="relative z-20 w-fit max-w-[90%] md:max-w-4xl mx-auto reveal-up">
+            <!-- Glassmorphism Card Wrapper -->
+            <div
+                class="relative bg-[#111210]/60 backdrop-blur-2xl border border-white/5 rounded-[40px] p-10 md:p-20 text-center shadow-[0_50px_100px_rgba(0,0,0,0.8)] overflow-hidden group">
+
+                <!-- Subtle Gradient in background of card -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-primary-900/10 via-transparent to-transparent pointer-events-none">
+                </div>
+
+                <!-- Card Inner Glow on Hover -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
+                </div>
+
+                <!-- Subtle Top Highlight -->
+                <div
+                    class="absolute top-0 left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-primary-500 to-transparent opacity-80 z-20">
+                </div>
+                <!-- Interactive Spotlight inside card -->
+                <div class="absolute inset-0 z-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                    style="background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(34, 197, 94, 0.08), transparent 40%);">
+                </div>
+
+                <div
+                    class="flex flex-col items-center relative z-10 transition-transform duration-700 ease-out group-hover:scale-[1.02]">
+                    <!-- Top Icon/Orb -->
+                    <div
+                        class="w-16 h-16 rounded-full bg-stone-950/80 border border-stone-800 flex items-center justify-center mb-10 shadow-inner relative transition-colors duration-500 group-hover:border-primary-500/30">
+                        <iconify-icon icon="solar:bolt-circle-bold-duotone"
+                            class="text-3xl text-primary-500/80 blur-[0.5px] transition-all duration-500 group-hover:blur-0 group-hover:text-primary-400 group-hover:drop-shadow-[0_0_15px_rgba(34,197,94,0.6)]"></iconify-icon>
+                    </div>
+
+                    <h2
+                        class="font-display text-4xl md:text-5xl lg:text-[4rem] font-bold tracking-tight text-stone-100 leading-[1.1] mb-8 relative">
+                        <span class="block">Comece a</span>
+                        <span class="block">economizar</span>
+                        <span class="text-primary-500 drop-shadow-[0_0_30px_rgba(34,197,94,0.4)]">hoje mesmo.</span> É
+                        grátis.
+                    </h2>
+
+                    <p class="text-stone-400/90 text-lg md:text-xl font-light leading-relaxed max-w-lg mx-auto mb-14">
+                        Sem custo, sem obras, sem burocracia.<br class="hidden md:block" />
+                        Só desconto todo mês na sua conta de luz.
+                    </p>
+
+                    <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20minha%20ades%C3%A3o%20%C3%A0%20iGreen%20Energy%20e%20garantir%20meu%20desconto."
+                        class="btn-beam btn-beam-green p-[2px] w-full sm:w-auto h-14 md:h-16 inline-flex cursor-pointer rounded-full relative z-20 hover:scale-105 transition-transform duration-300"
+                        target="_blank">
+                        <div
+                            class="btn-beam-content rounded-full font-semibold tracking-wide flex justify-center items-center text-sm md:text-base px-8 md:px-10 gap-3 relative h-full w-full bg-primary-500 text-white group-hover:bg-primary-600 border-none transition-all duration-300">
+                            <span>Quero meu desconto agora</span>
+                            <div
+                                class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                                <iconify-icon icon="solar:alt-arrow-right-linear"
+                                    class="text-xs text-white"></iconify-icon>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Footer Tags -->
+                    <div
+                        class="mt-14 flex items-center justify-center gap-6 text-[10px] md:text-xs font-mono tracking-widest text-[#78716C] uppercase font-bold">
+                        <span>CNPJ Ativo</span>
+                        <span class="w-1 h-1 rounded-full bg-[#78716C]"></span>
+                        <span>Zero Investimento</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer class="bg-stone-950 text-stone-500 py-16 border-t border-stone-800 relative z-20">
+        <div class="max-w-[1440px] mx-auto px-6 text-center">
+            <div class="flex flex-col items-center gap-4">
+                <div
+                    class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[10px] md:text-xs uppercase tracking-[0.1em] font-medium text-stone-400">
+                    <span class="text-white">Almeida Igreen</span>
+                    <span class="hidden md:inline w-1 h-1 bg-stone-700 rounded-full"></span>
+                    <span class="font-mono">CNPJ 55.210.200/0001-60</span>
+                    <span class="hidden md:inline w-1 h-1 bg-stone-700 rounded-full"></span>
+                    <span>Rua Ceará, 138 Apto 101, Lourdes, CEP 35032-120, Minas Gerais</span>
+                </div>
+                <div class="text-[9px] md:text-xs font-mono text-stone-600">
+                    &copy; 2026 Almeida Igreen. Todos os direitos reservados.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <div id="hero-hud"
+        class="hidden lg:flex fixed right-6 top-0 h-screen flex-col justify-center items-center gap-6 z-[9999] pointer-events-none">
+        <div class="pointer-events-auto flex flex-col items-center">
+            <div
+                class="text-[10px] font-mono text-stone-400 rotate-90 tracking-widest uppercase mb-12 whitespace-nowrap">
+                Scroll Progress</div>
+
+            <div class="w-px h-24 bg-stone-700 relative overflow-hidden rounded-full mb-4">
+                <div id="scroll-progress-bar"
+                    class="absolute top-0 left-0 w-full bg-primary-500 h-0 transition-all ease-out duration-100">
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 text-[10px] font-mono font-bold text-stone-400 mt-4">
+                <span class="step-marker active transition-colors duration-300 cursor-pointer hover:text-white"
+                    id="step-01" onclick="document.getElementById('hero').scrollIntoView({behavior:'smooth'})">01</span>
+                <span class="step-marker transition-colors duration-300 cursor-pointer hover:text-white" id="step-02"
+                    onclick="document.getElementById('beneficios').scrollIntoView({behavior:'smooth'})">02</span>
+                <span class="step-marker transition-colors duration-300 cursor-pointer hover:text-white" id="step-03"
+                    onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">03</span>
+                <span class="step-marker transition-colors duration-300 cursor-pointer hover:text-white" id="step-04"
+                    onclick="document.getElementById('depoimentos').scrollIntoView({behavior:'smooth'})">04</span>
+                <span class="step-marker transition-colors duration-300 cursor-pointer hover:text-white" id="step-05"
+                    onclick="document.getElementById('autoridade').scrollIntoView({behavior:'smooth'})">05</span>
+                <span class="step-marker transition-colors duration-300 cursor-pointer hover:text-white" id="step-06"
+                    onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">06</span>
+                <span class="step-marker transition-colors duration-300 cursor-pointer hover:text-white" id="step-07"
+                    onclick="document.getElementById('final-cta').scrollIntoView({behavior:'smooth'})">07</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // 1. Initialize Lenis (Smooth Scroll)
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+                mouseMultiplier: 1,
+                smoothTouch: false,
+                touchMultiplier: 2,
+                infinite: false,
+            });
+
+            // Keep GSAP in sync with Lenis
+            lenis.on('scroll', ScrollTrigger.update);
+
+            // READING PROGRESS LOGIC
+            const progressLine = document.getElementById('reading-progress');
+            lenis.on('scroll', ({ scroll, limit }) => {
+                const progress = (scroll / limit) * 100;
+                if (progressLine) progressLine.style.width = `${progress}%`;
+            });
+
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            gsap.ticker.lagSmoothing(0);
+
+            // PARALLAX BACKGROUND TEXT (Authority)
+            gsap.to('.trust-outline-text', {
+                scrollTrigger: {
+                    trigger: '#autoridade',
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 2
+                },
+                x: -300,
+                ease: "none"
+            });
+
+            // FAQ SPOTLIGHT INTERACTION
+            const faqSection = document.getElementById('faq');
+            if (faqSection) {
+                faqSection.addEventListener('mousemove', (e) => {
+                    const rect = faqSection.getBoundingClientRect();
+                    faqSection.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+                    faqSection.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+                });
+            }
+
+            // 2. Initial Entrance Animations
+            setTimeout(() => {
+                const revealElements = document.querySelectorAll('.reveal-up');
+                revealElements.forEach(elem => {
+                    elem.classList.add('active');
+                });
+
+                // Animate GSAP Hero Entrances manually
+                const heroTimeline = gsap.timeline();
+
+                heroTimeline.to('.hero-gsap-entrance', {
+                    onStart: function () {
+                        // For reveal-wrapper, we just need to add the active class to the parent
+                        document.querySelectorAll('.hero-gsap-entrance').forEach(el => el.classList.add('active'));
+                    },
+                    duration: 0.1
+                })
+                    .to('.hero-gsap-entrance:not(.text-reveal-wrapper)', {
+                        y: 0,
+                        opacity: 1,
+                        filter: "blur(0px)",
+                        duration: 1.2,
+                        stagger: 0.1,
+                        ease: "power3.out"
+                    }, 0);
+
+            }, 100);
+
+            // COPY CNPJ FUNCTION
+            window.copyCNPJ = () => {
+                const cnpj = "55.210.200/0001-60";
+                navigator.clipboard.writeText(cnpj).then(() => {
+                    const textEl = document.getElementById('cnpj-text');
+                    const originalText = textEl.innerText;
+                    textEl.innerText = "COPIADO!";
+                    textEl.classList.add('text-primary-500');
+                    setTimeout(() => {
+                        textEl.innerText = originalText;
+                        textEl.classList.remove('text-primary-500');
+                    }, 2000);
+                });
+            };
+
+            // 3. Scroll Reveal for elements further down
+            const scrollReveals = document.querySelectorAll('#beneficios .reveal-up');
+            scrollReveals.forEach(elem => {
+                ScrollTrigger.create({
+                    trigger: elem,
+                    start: "top 85%",
+                    onEnter: () => elem.classList.add('active'),
+                    once: true
+                });
+            });
+
+            // 4. Video Scroll-Scrub Logic (Upgraded to Canvas Image Sequence)
+            const canvas = document.getElementById('hero-canvas');
+            const ctx = canvas.getContext('2d');
+            const loading = document.getElementById('video-loading');
+            const progressBar = document.getElementById('scroll-progress-bar');
+            const step1 = document.getElementById('step-01');
+            const step2 = document.getElementById('step-02');
+            const step3 = document.getElementById('step-03');
+            const heroText = document.getElementById('hero-text-content');
+            const heroHud = document.getElementById('hero-hud');
+
+            // --- CANVAS IMAGE SEQUENCE SETUP ---
+            const isMobile = window.innerWidth <= 768;
+
+            // We will set canvas width and height dynamically based on the first loaded image
+            // to ensure its aspect ratio is perfectly preserved.
+
+            const frameCount = 192; // Total extracted frames
+            const currentFrame = index => {
+                const pad = index.toString().padStart(4, '0');
+                // Carrega frames mais leves e em menor resolução no celular
+                return isMobile
+                    ? `assets/frames-webp-mobile/frame_${pad}_1_1x.webp`
+                    : `assets/frames-webp/frame_${pad}_1_1x.webp`;
+            };
+
+            const images = [];
+            const seqData = { frame: 1 };
+
+            // GSAP Sequence Timeline
+            let tl;
+
+            // Preload the first frame immediately to avoid blank screen
+            const firstImage = new Image();
+            firstImage.src = currentFrame(1);
+            firstImage.onload = () => {
+                // Determine resolution dynamically to prevent stretching/squishing
+                canvas.width = firstImage.width;
+                canvas.height = firstImage.height;
+                ctx.drawImage(firstImage, 0, 0, canvas.width, canvas.height);
+                // Preload the rest asynchronously
+                preloadFrames();
+            };
+
+            function preloadFrames() {
+                let loadedImages = 0;
+                for (let i = 1; i <= frameCount; i++) {
+                    const img = new Image();
+                    img.src = currentFrame(i);
+                    images.push(img);
+
+                    img.onload = () => {
+                        loadedImages++;
+                        if (loadedImages === frameCount) {
+                            setupScrubAnimation();
+                        }
+                    };
+                    img.onerror = () => {
+                        // Fallback logic if some frames are missing
+                        loadedImages++;
+                        if (loadedImages === frameCount) {
+                            setupScrubAnimation();
+                        }
+                    };
+                }
+            }
+
+            // Fallback timeout just in case network is too slow loading 190 frames
+            let fallbackTimeout = setTimeout(() => {
+                if (images.length > 10) {
+                    console.warn("Images are loading slowly. Starting scrub with available frames.");
+                    setupScrubAnimation();
+                }
+            }, 6000);
+
+
+
+            // --- NEW INSTRUMENT ORBS ---
+
+
+            // Animate Background Orbs for Calculator Section
+            gsap.to('.bg-orb-calc-1', {
+                x: 'random(-40, 40)',
+                y: 'random(-40, 40)',
+                duration: 'random(6, 10)',
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+            gsap.to('.bg-orb-calc-2', {
+                x: 'random(-30, 30)',
+                y: 'random(-30, 30)',
+                duration: 'random(8, 12)',
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+
+            // --- SMOOTH SCROLL BUTTONS ---
+            function scrollToCalc(e) {
+                if (e) e.preventDefault();
+                // Calculator is fully visible at prog 0.8...1.0 of the timeline. 
+                // Let's scroll to roughly 85% of the hero container height to see it perfectly.
+                const heroElem = document.getElementById('hero');
+                if (heroElem) {
+                    const targetScroll = heroElem.offsetTop + (heroElem.offsetHeight * 0.85);
+                    lenis.scrollTo(targetScroll, { duration: 1.5, ease: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+                }
+            }
+
+            const btnScrollCalc = document.getElementById('btn-scroll-calc');
+            if (btnScrollCalc) btnScrollCalc.addEventListener('click', scrollToCalc);
+
+            const btnScrollCalc2 = document.getElementById('btn-scroll-calc-2');
+            if (btnScrollCalc2) btnScrollCalc2.addEventListener('click', scrollToCalc);
+
+            const btnScrollInfo = document.getElementById('btn-scroll-info');
+            if (btnScrollInfo) {
+                btnScrollInfo.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Scroll to Beneficios Section
+                    const benefElem = document.getElementById('beneficios');
+                    if (benefElem) {
+                        lenis.scrollTo(benefElem, { duration: 1.5 });
+                    }
+                });
+            }
+
+            // --- GENERIC ANCHOR LINK HANDLER FOR NAVBAR / OTHERS ---
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    if (targetId === '#calculator-panel') {
+                        scrollToCalc(e);
+                        return;
+                    }
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        lenis.scrollTo(targetElement, { duration: 1.5, offset: 0 });
+                    }
+                });
+            });
+
+            function setupScrubAnimation() {
+                clearTimeout(fallbackTimeout);
+
+                // Show canvas, hide loading
+                loading.style.opacity = '0';
+                setTimeout(() => loading.style.display = 'none', 300);
+
+                // Animate initial canvas fade-in via GSAP to avoid CSS transition conflicts later
+                gsap.to(canvas, { opacity: 1, duration: 1 });
+
+                // GSAP ScrollTrigger for Video Scrubbing (Canvas Drawing)
+                tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: ".hero-scrub-container",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 0.5, // Crisp and responsive scrubbing for images
+                        onUpdate: (self) => {
+                            // HUD Update logic moved to lenis scroll handler for full-page support
+                        }
+                    }
+                });
+
+                // Let GSAP cleanly tween the frame number across our image array
+                // We keep the scrub going almost until the very end (90% of the scroll).
+                // As it approaches its final frames, the calculator will already start appearing.
+                tl.to(seqData, {
+                    frame: frameCount - 1,
+                    snap: "frame", // Snap to whole numbers since arrays don't have decimals
+                    ease: "none",
+                    duration: 0.9, // Scrub finishes smoothly right before the absolute end
+                    onUpdate: renderFrame
+                }, 0); // Start at perfectly 0 (syncs with scroll)
+
+                // Parallax, Blur and Fade out effect for the Text Content (Staggered item by item)
+                if (heroText && heroText.children) {
+                    // We select all direct children of the text container to fade them sequentially
+                    tl.fromTo(heroText.children,
+                        { y: 0, opacity: 1, filter: "blur(0px)" },
+                        {
+                            y: -150, // Parallax move up
+                            opacity: 0,
+                            filter: "blur(12px)", // Blur out effect
+                            duration: 0.4, // Individual duration
+                            stagger: 0.03, // Small gap, so they exit almost immediately one after another
+                            ease: "power2.inOut",
+                            immediateRender: false // Ensures it doesn't break the entrance animation on page load
+                        }, 0);
+                }
+
+                // Fade out mobile gradient overlay on scroll
+                const gradientOverlay = document.getElementById('hero-gradient-overlay');
+                if (gradientOverlay && window.innerWidth <= 768) {
+                    tl.fromTo(gradientOverlay,
+                        { opacity: 1 },
+                        {
+                            opacity: 0.6, // Fades to a slightly lighter state but remains permanent
+                            duration: 0.4, // Matches text fade duration
+                            ease: "power2.inOut",
+                            immediateRender: false
+                        }, 0);
+                }
+
+                // Parallax, Blur and Fade out effect for the HUD
+                if (heroHud) {
+                    /* Removed fade out to keep HUD visible through the whole page
+                    tl.fromTo(heroHud,
+                        { x: 0, opacity: 1, filter: "blur(0px)" },
+                        {
+                            x: 40, // Move slightly to the right
+                            opacity: 0,
+                            filter: "blur(8px)",
+                            duration: 0.5,
+                            ease: "power2.inOut",
+                            immediateRender: false
+                        }, 0);
+                    */
+                }
+
+                // --- DOBRA 2 (CALCULATOR) TRANSITION ---
+
+                // Make the calculator appear and finish its animation much earlier
+                // so the user has time to use it without scrolling past the hero section.
+                const calcAppearsAt = isMobile ? 0.55 : 0.6; // Adjusted to be 75% towards new timing
+                const calcDuration = isMobile ? 0.25 : 0.2;
+
+                // 2. Animate the Calculator entry right as it starts dimming
+                const calcPanel = document.getElementById('calculator-panel');
+                if (calcPanel) {
+                    tl.fromTo(calcPanel,
+                        { y: 100, opacity: 0, filter: "blur(15px)" },
+                        {
+                            y: 0,
+                            opacity: 1,
+                            filter: "blur(0px)", // Fully sharp
+                            duration: calcDuration,
+                            ease: "power2.out",
+                            immediateRender: false
+                        }, calcAppearsAt);
+                }
+
+                // 1. Dim the canvas background immediately after the calculator begins
+                // but stretch the blur effect gradually until the VERY END of the scroll sequence.
+                if (canvas) {
+                    tl.to(canvas, {
+                        opacity: 0.25, // Lower opacity
+                        filter: "blur(6px)", // Soften background
+                        duration: 1 - (calcAppearsAt + 0.02), // Stretches until the end of the scroll
+                        ease: "none" // Linear transition matches scroll speed perfectly
+                    }, calcAppearsAt + 0.02);
+                }
+            }
+
+            function renderFrame() {
+                const imgToDraw = images[seqData.frame];
+                if (imgToDraw && imgToDraw.complete) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(imgToDraw, 0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            // --- LAYERED SCROLL: VANTAGENS -> COMO FUNCIONA ---
+            const beneficiosSec = document.getElementById('beneficios');
+            const comoFuncionaSec = document.getElementById('como-funciona');
+
+            if (beneficiosSec && comoFuncionaSec) {
+                // Let's decide if we pin at the top or bottom to avoid cutting content on small screens
+                // Pin at 'bottom bottom' for ALL environments so the user can see everything before it sticks.
+                ScrollTrigger.create({
+                    trigger: beneficiosSec,
+                    start: "bottom bottom",
+                    endTrigger: comoFuncionaSec,
+                    end: "top top",
+                    pin: true,
+                    pinSpacing: false, // Critical: this makes the next section scroll over it instead of pushing it
+                });
+
+                // Subtle 3D push-back effect — starts CLEAR, progressively darkens as overlap happens
+                gsap.fromTo(beneficiosSec,
+                    // FROM: natural state (nothing applied)
+                    { scale: 1, filter: "brightness(1) blur(0px)" },
+                    // TO: shrunk and darkened as Como Funciona covers it
+                    {
+                        scale: 0.95,
+                        filter: "brightness(0.6) blur(2px)",
+                        ease: "none",
+                        immediateRender: false,
+                        scrollTrigger: {
+                            trigger: comoFuncionaSec,
+                            start: "top bottom",
+                            end: "top top",
+                            scrub: true,
+                        }
+                    }
+                );
+            }
+
+            // --- SMART HEADER BEHAVIOR (Hide on Scroll Down, Show on Scroll Up, Keep on Hover) ---
+            const navbar = document.getElementById('navbar');
+            let lastScrollTop = 0;
+            const scrollThreshold = 80;
+            let isNavbarHovered = false;
+
+            if (navbar) {
+                // Track hover state
+                navbar.addEventListener('mouseenter', () => isNavbarHovered = true);
+                navbar.addEventListener('mouseleave', () => {
+                    isNavbarHovered = false;
+                    // Re-evaluate visibility when mouse leaves, based on current scroll position
+                    if (window.scrollY > lastScrollTop && window.scrollY > scrollThreshold) {
+                        navbar.style.transform = 'translateY(-100%)';
+                    }
+                });
+
+                lenis.on('scroll', (e) => {
+                    const currentScrollTop = e.scroll;
+
+                    // Hide/Show logic
+                    if (currentScrollTop > lastScrollTop && currentScrollTop > scrollThreshold) {
+                        // Scrolling Down - only hide if not hovered
+                        if (!isNavbarHovered) {
+                            navbar.style.transform = 'translateY(-100%)';
+                        }
+                    } else {
+                        // Scrolling Up
+                        navbar.style.transform = 'translateY(0)';
+                    }
+
+                    // Add shadow only after scrolling a bit
+                    if (currentScrollTop > 50) {
+                        navbar.classList.add('shadow-xl');
+                    } else {
+                        navbar.classList.remove('shadow-xl');
+                    }
+
+                    // --- SECTION SCROLL PROGRESS & HUD MARKERS ---
+                    const sections = ['hero', 'beneficios', 'como-funciona', 'depoimentos', 'autoridade', 'faq', 'final-cta'].map(id => document.getElementById(id)).filter(Boolean);
+                    const markers = [1, 2, 3, 4, 5, 6, 7].map(num => document.getElementById(`step-0${num}`));
+                    const progressBar = document.getElementById('scroll-progress-bar');
+
+                    if (sections.length > 0 && progressBar) {
+                        // Progress bar logic based on overall page scroll
+                        const scrollPercent = currentScrollTop / (document.documentElement.scrollHeight - window.innerHeight);
+                        progressBar.style.height = `${Math.min(100, Math.max(0, scrollPercent * 100))}%`;
+
+                        // Activate the current section marker
+                        sections.forEach((sec, index) => {
+                            const rect = sec.getBoundingClientRect();
+                            // If the section is occupying the middle of the screen
+                            if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                                markers.forEach(m => m && m.classList.remove('active'));
+                                if (markers[index]) markers[index].classList.add('active');
+                            }
+                        });
+                    }
+
+                    lastScrollTop = currentScrollTop;
+                });
+            }
+
+            // ══════════════════════════════════════════════════════
+            // HIGH-FIDELITY CALCULATOR INSTRUMENT LOGIC
+            // ══════════════════════════════════════════════════════
+            const calcInput = document.getElementById('calc-input');
+            const resEconomia = document.getElementById('res-economia');
+            const resPaga = document.getElementById('res-paga');
+            const res25Anos = document.getElementById('res-25anos');
+
+            function formatCurrency(val) {
+                return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+            }
+
+
+            if (calcInput) {
+                calcInput.addEventListener('input', (e) => {
+                    let val = e.target.value.replace(/\D/g, "");
+                    val = (val / 100).toFixed(2);
+                    e.target.value = val > 0 ? val.replace(".", ",") : "";
+
+                    const monthly = parseFloat(val);
+                    if (isNaN(monthly) || monthly === 0) {
+                        gsap.to([resEconomia, resPaga, res25Anos], { textContent: "R$ 0,00", duration: 0.3 });
+                        return;
+                    }
+
+                    const economyPerMonth = monthly * 0.28; // Up to 28% Discount
+                    const newMonthly = monthly - economyPerMonth;
+                    const economy1Ano = economyPerMonth * 12;
+
+                    // GSAP Rolling Numbers
+                    const obj = { e: 0, p: 0, t: 0 };
+                    gsap.to(obj, {
+                        e: economyPerMonth,
+                        p: newMonthly,
+                        t: economy1Ano,
+                        duration: 1,
+                        ease: "power2.out",
+                        onUpdate: () => {
+                            resEconomia.textContent = formatCurrency(obj.e);
+                            resPaga.textContent = formatCurrency(obj.p);
+                            res25Anos.textContent = formatCurrency(obj.t);
+                        }
+                    });
+                });
+
+                // Mask for better UX
+                calcInput.addEventListener('blur', () => {
+                    if (calcInput.value && !calcInput.value.includes("R$")) {
+                        // Optional: add R$ prefix on blur
+                    }
+                });
+            }
+
+            // ══════════════════════════════════════════════════════
+            // DEPOIMENTOS MOBILE TOUCH LOGIC
+            // ══════════════════════════════════════════════════════
+            const depoiWrap = document.querySelector('.depoi-scroll-wrap');
+            if (window.innerWidth <= 768 && depoiWrap) {
+                let isDragging = false;
+                let autoScrollSpeed = 0.8; // px per frame
+                let animationId;
+                let scrollTimeout;
+
+                function startAutoScroll() {
+                    if (isDragging) return;
+                    depoiWrap.scrollLeft += autoScrollSpeed;
+
+                    // Reset if we reach roughly the duplicated items
+                    if (depoiWrap.scrollLeft >= depoiWrap.scrollWidth / 2) {
+                        depoiWrap.scrollLeft = 0;
+                    }
+                    animationId = requestAnimationFrame(startAutoScroll);
+                }
+
+                depoiWrap.addEventListener('touchstart', () => {
+                    isDragging = true;
+                    cancelAnimationFrame(animationId);
+                    clearTimeout(scrollTimeout);
+                }, { passive: true });
+
+                depoiWrap.addEventListener('touchend', () => {
+                    isDragging = false;
+                    scrollTimeout = setTimeout(() => {
+                        if (!isDragging) startAutoScroll();
+                    }, 5000); // 5s delay before resuming auto-scroll
+                });
+
+                startAutoScroll();
+            }
+
+        });
+    </script>
+
+    <!-- ══════════════════════════════════════════════════════
+         RECRUITMENT POP-UP
+    ══════════════════════════════════════════════════════ -->
+    <div id="recruit-popup" class="fixed inset-0 z-[9999] hidden flex items-center justify-center p-6"
+        style="pointer-events: none;">
+        <!-- Overlay -->
+        <div id="recruit-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-md opacity-0"></div>
+
+        <!-- Card -->
+        <div id="recruit-card"
+            class="relative w-full max-w-lg bg-stone-900 border border-white/10 rounded-[32px] p-8 md:p-10 shadow-2xl overflow-hidden opacity-0 transform translate-y-12"
+            style="pointer-events: auto;">
+            <!-- Decorative Glow -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary-500/20 blur-[80px]"></div>
+
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <div
+                    class="mb-6 w-16 h-16 rounded-2xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center">
+                    <iconify-icon icon="solar:wad-of-money-bold-duotone"
+                        class="text-3xl text-primary-400"></iconify-icon>
+                </div>
+
+                <h3 class="font-display text-2xl md:text-3xl font-semibold text-white tracking-tight mb-4">
+                    Quer construir uma renda extra com energia solar?
+                </h3>
+
+                <p class="text-stone-400 text-sm md:text-base leading-relaxed mb-8">
+                    Seja licenciado Igreen e gere comissões recorrentes indicando clientes. Oportunidade única no
+                    mercado que mais cresce no Brasil.
+                </p>
+
+                <div class="flex flex-col w-full gap-3">
+                    <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Vi%20no%20site%20e%20quero%20saber%20mais%20sobre%20como%20ser%20um%20licenciado%20iGreen.%20Pode%20me%20explicar?"
+                        target="_blank"
+                        class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-4 text-center rounded-xl transition-all duration-300 transform hover:scale-[1.02]">
+                        Quero saber mais →
+                    </a>
+
+                    <button id="close-popup-btn"
+                        class="w-full text-stone-500 hover:text-white text-sm font-medium py-2 transition-colors">
+                        Não, obrigado
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Independent Popup Logic -->
+    <script>
+        (function () {
+            const popup = document.getElementById('recruit-popup');
+            const card = document.getElementById('recruit-card');
+            const overlay = document.getElementById('recruit-overlay');
+            const closeBtn = document.getElementById('close-popup-btn');
+            let hasTriggered = false;
+
+            function triggerPopup() {
+                if (hasTriggered) return;
+                hasTriggered = true;
+
+                popup.classList.remove('hidden');
+                popup.style.pointerEvents = 'auto';
+
+                // GSAP check to avoid error if CDN failed
+                if (window.gsap) {
+                    gsap.to(overlay, { opacity: 1, duration: 0.5 });
+                    gsap.to(card, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.7)" });
+                } else {
+                    overlay.style.opacity = '1';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0) scale(1)';
+                }
+            }
+
+            function closePopup() {
+                if (window.gsap) {
+                    gsap.to(card, { opacity: 0, y: 20, scale: 0.95, duration: 0.4 });
+                    gsap.to(overlay, {
+                        opacity: 0, duration: 0.4, onComplete: () => {
+                            popup.classList.add('hidden');
+                            popup.style.pointerEvents = 'none';
+                        }
+                    });
+                } else {
+                    popup.classList.add('hidden');
+                }
+            }
+
+            if (closeBtn) closeBtn.onclick = closePopup;
+
+            // Trigger 1: Time (40s para evitar travamentos iniciais no mobile)
+            setTimeout(triggerPopup, 40000);
+
+            // Trigger 2: Scroll (70%)
+            window.addEventListener('scroll', () => {
+                const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                if (scrollPercent >= 70) triggerPopup();
+            }, { passive: true });
+        })();
+    </script>
+</body>
+
+</html>
