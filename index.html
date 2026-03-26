@@ -3350,7 +3350,7 @@
                 </p>
 
                 <!-- Popup Video Button -->
-                <button data-video-src="assets/video%202.mp4"
+                <button id="recruit-video-btn" data-video-src="assets/video%202.mp4"
                     class="btn-watch-video-trigger flex items-center justify-center gap-3 w-full py-4 border border-white/10 rounded-xl mb-4 bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white transition-all group/vid">
                     <div
                         class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs group-hover/vid:scale-110 transition-transform">
@@ -3417,6 +3417,14 @@
             }
 
             if (closeBtn) closeBtn.onclick = closePopup;
+            if (overlay) overlay.onclick = closePopup;
+
+            const videoBtn = document.getElementById('recruit-video-btn');
+            if (videoBtn) {
+                videoBtn.addEventListener('click', () => {
+                    closePopup();
+                });
+            }
 
             // Trigger 1: Time (40s para evitar travamentos iniciais no mobile)
             setTimeout(triggerPopup, 40000);
