@@ -396,6 +396,41 @@
                 background-color: #16a34a !important;
             }
         }
+
+        /* Video Modal Styles */
+        #video-modal {
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #video-modal.active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
+        #video-modal.active #video-modal-content {
+            transform: scale(1) !important;
+        }
+
+        .play-btn-pulse {
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            animation: play-pulse 2s infinite;
+        }
+
+        @keyframes play-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
     </style>
 </head>
 
@@ -510,6 +545,15 @@
                                 <iconify-icon icon="solar:arrow-right-linear"
                                     class="group-hover:translate-x-1 transition-transform text-lg text-white"></iconify-icon>
                             </div>
+                        </button>
+
+                        <!-- Video Play Button -->
+                        <button id="btn-watch-video"
+                            class="btn-watch-video-trigger px-6 py-4 text-stone-300 hover:text-primary-400 font-medium text-sm flex items-center gap-3 transition-all group">
+                            <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-primary-500/20 group-hover:border-primary-500/50 transition-all play-btn-pulse">
+                                <iconify-icon icon="solar:play-bold" class="text-lg group-hover:scale-110 transition-transform"></iconify-icon>
+                            </div>
+                            <span>Ver como funciona</span>
                         </button>
 
                         <!-- Secondary CTA -->
@@ -839,6 +883,113 @@
         </div>
     </section>
 
+    <!-- CLUBE DE BENEFÍCIOS SECTION -->
+    <!-- ══════════════════════════════════════════════════════
+         4. DOBRA — CLUBE DE BENEFÍCIOS (DARK PREMIUM)
+    ══════════════════════════════════════════════════════ -->
+    <section id="clube-beneficios"
+        class="relative bg-[#111210] py-24 md:py-32 overflow-hidden z-20 border-t border-white/5">
+        <!-- Ambient Background Glows -->
+        <div class="absolute -top-[10%] -left-[10%] w-[600px] h-[600px] bg-primary-900/10 rounded-full blur-[150px] pointer-events-none opacity-50"></div>
+        <div class="absolute bottom-[10%] right-[-10%] w-[500px] h-[500px] bg-primary-600/10 rounded-full blur-[120px] pointer-events-none opacity-30"></div>
+        <div class="absolute inset-0 opacity-[0.05] pointer-events-none" style="background-size: 40px 40px; background-image: radial-gradient(circle, #22C55E 1px, transparent 1px);"></div>
+
+        <div class="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+                
+                <!-- Left: Content Bento (7 Columns) -->
+                <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-5 reveal-up">
+                    <div class="md:col-span-2 mb-4">
+                        <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-mono uppercase tracking-[0.3em] mb-8">
+                            Clube iGreen Exclusive
+                        </div>
+                        <h2 class="font-display text-4xl md:text-6xl font-bold text-white tracking-tighter leading-[0.95] mb-8">
+                            Economia real<br>em cada <span class="text-primary-500">detalhe</span> da vida.
+                        </h2>
+                        <p class="text-stone-400 text-lg font-light leading-relaxed max-w-xl">
+                            Seja cliente iGreen e ganhe acesso gratuito ao nosso ecossistema de vantagens. Transforme gastos do dia a dia em pura economia.
+                        </p>
+                    </div>
+
+                    <!-- Mini Cards Bento -->
+                    <div class="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[32px] p-8 hover:bg-white/[0.08] transition-all hover:-translate-y-1 duration-500 group/card">
+                        <div class="w-12 h-12 rounded-2xl bg-orange-500/20 flex items-center justify-center text-orange-500 mb-6 group-hover/card:scale-110 transition-transform">
+                            <iconify-icon icon="solar:ticket-bold-duotone" class="text-2xl"></iconify-icon>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">Cinema e Lazer</h4>
+                        <p class="text-stone-400 text-sm leading-relaxed">Ganhe até 50% de desconto nas maiores redes do país: Cinemark, Kinoplex e mais.</p>
+                    </div>
+
+                    <div class="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[32px] p-8 hover:bg-white/[0.08] transition-all hover:-translate-y-1 duration-500 group/card">
+                        <div class="w-12 h-12 rounded-2xl bg-red-500/20 flex items-center justify-center text-red-500 mb-6 group-hover/card:scale-110 transition-transform">
+                            <iconify-icon icon="solar:medical-kit-bold-duotone" class="text-2xl"></iconify-icon>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">Saúde e Bem-estar</h4>
+                        <p class="text-stone-400 text-sm leading-relaxed">Pague menos em medicamentos e farmácias: Droga Raia, Drogasil e Pague Menos.</p>
+                    </div>
+
+                    <div class="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[32px] p-8 hover:bg-white/[0.08] transition-all hover:-translate-y-1 duration-500 group/card">
+                        <div class="w-12 h-12 rounded-2xl bg-primary-500/20 flex items-center justify-center text-primary-500 mb-6 group-hover/card:scale-110 transition-transform">
+                            <iconify-icon icon="solar:shop-bold-duotone" class="text-2xl"></iconify-icon>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">Compras</h4>
+                        <p class="text-stone-400 text-sm leading-relaxed">Cupons exclusivos para Centauro, Netshoes, Casas Bahia e centenas de lojas online.</p>
+                    </div>
+
+                    <div class="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[32px] p-8 hover:bg-white/[0.08] transition-all hover:-translate-y-1 duration-500 group/card">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-500 mb-6 group-hover/card:scale-110 transition-transform">
+                            <iconify-icon icon="solar:chef-hat-heart-bold-duotone" class="text-2xl"></iconify-icon>
+                        </div>
+                        <h4 class="text-white font-bold text-lg mb-2">Gastronomia</h4>
+                        <p class="text-stone-400 text-sm leading-relaxed">Economize em jantares e vouchers exclusivos em redes parceiras e franquias famosas.</p>
+                    </div>
+                </div>
+
+                <!-- Right: Massive Vertical Video Preview (5 Columns) -->
+                <div class="lg:col-span-5 relative flex justify-center lg:justify-end reveal-up delay-200">
+                    <!-- Background Dynamic Shadow -->
+                    <div class="absolute inset-0 bg-primary-500/30 blur-[120px] rounded-full scale-75 -z-10 animate-pulse"></div>
+
+                    <div class="relative rounded-[64px] p-3 border-[14px] border-stone-800 bg-stone-900 shadow-[0_60px_150px_-20px_rgba(0,0,0,0.9)] overflow-hidden aspect-[9/16] w-full max-w-[400px] group cursor-pointer btn-watch-video-trigger transition-all duration-700 hover:scale-[1.05] hover:shadow-primary-500/30"
+                        data-video-src="assets/video%204.mp4" data-is-vertical="true">
+
+                        <img src="assets/clube-beneficios.png"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[4000ms]"
+                            alt="Clube iGreen">
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent opacity-90"></div>
+                        
+                        <!-- Floating Interactive Badges -->
+                        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-[85%] flex flex-col gap-4 z-10 transition-all duration-500 group-hover:bottom-16">
+                             <div class="bg-white/10 backdrop-blur-2xl px-6 py-5 rounded-[24px] border border-white/20 shadow-2xl flex items-center justify-between group-hover:translate-x-3 transition-transform">
+                                <div class="flex items-center gap-3">
+                                    <iconify-icon icon="solar:ticket-bold" class="text-orange-500 text-xl"></iconify-icon>
+                                    <span class="text-white font-bold text-sm">Cinemas</span>
+                                </div>
+                                <span class="bg-orange-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">50% OFF</span>
+                            </div>
+                             <div class="bg-white/10 backdrop-blur-2xl px-6 py-5 rounded-[24px] border border-white/20 shadow-2xl flex items-center justify-between group-hover:-translate-x-3 transition-transform delay-75">
+                                <div class="flex items-center gap-3">
+                                    <iconify-icon icon="solar:medical-kit-bold" class="text-red-500 text-xl"></iconify-icon>
+                                    <span class="text-white font-bold text-sm">Farmácias</span>
+                                </div>
+                                <span class="bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">-60%</span>
+                            </div>
+                        </div>
+
+                        <!-- Central Play Button (Larger) -->
+                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                             <div class="w-28 h-28 rounded-full bg-primary-500 flex items-center justify-center text-white text-5xl shadow-2xl shadow-primary-500/40 group-hover:scale-110 transition-transform play-btn-pulse">
+                                <iconify-icon icon="solar:play-bold"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- COMO FUNCIONA Section -->
     <section id="como-funciona"
         class="pt-[160px] md:pt-24 pb-20 md:pb-24 relative bg-[#EAEAE5] z-30 shadow-[0_-30px_60px_rgba(0,0,0,0.15)]">
@@ -958,6 +1109,20 @@
                             Conectamos sua conta de energia a uma fazenda solar compartilhada. Todo o processo é
                             100% digital, rápido e sem necessidade de instalação elétrica ou obras.
                         </p>
+
+                        <!-- Secondary Video Trigger -->
+                        <button data-video-src="assets/video%203.mp4"
+                            class="btn-watch-video-trigger group flex items-center gap-4 px-6 py-4 rounded-2xl bg-white/60 hover:bg-white backdrop-blur-md border border-stone-200 transition-all shadow-sm hover:shadow-md">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-600 group-hover:bg-primary-500 group-hover:text-white transition-all play-btn-pulse">
+                                <iconify-icon icon="solar:play-bold" class="text-xl"></iconify-icon>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-[10px] font-mono uppercase tracking-widest text-stone-500 mb-0.5">Assista agora
+                                </p>
+                                <p class="text-sm font-semibold text-stone-900">Como funciona a Conexão Green</p>
+                            </div>
+                        </button>
                     </div>
                 </div>
 
@@ -2088,6 +2253,71 @@
     </section>
 
     <!-- ══════════════════════════════════════════════════════
+         6.5 SEJA LICENCIADO SECTION
+    ══════════════════════════════════════════════════════ -->
+    <section id="licenciados" class="relative bg-[#1c1917] py-24 md:py-32 overflow-hidden border-t border-white/5">
+        <div class="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none"></div>
+        <!-- Ambient Glow -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-900/20 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal-up">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-[10px] font-mono uppercase tracking-[0.2em] mb-8">
+                        Expansão & Oportunidade
+                    </div>
+                    <h2 class="font-display text-4xl md:text-6xl font-bold text-white tracking-tighter leading-[0.9] mb-8">
+                        Seja um <span class="text-primary-500">Licenciado</span><br>Almeida iGreen.
+                    </h2>
+                    <p class="text-stone-400 text-lg md:text-xl font-light leading-relaxed mb-12 max-w-xl">
+                        Construa uma renda extra recorrente ajudando pessoas e empresas a economizarem na conta de luz. <strong class="text-white font-medium">Sem estoque, sem investimento em infraestrutura, 100% digital.</strong>
+                    </p>
+                    <div class="flex flex-wrap items-center gap-6">
+                        <button data-video-src="assets/video%202.mp4"
+                            class="btn-watch-video-trigger btn-beam btn-beam-green p-[2px] h-16 group block cursor-pointer min-w-[240px]">
+                            <div class="btn-beam-content rounded-full px-8 font-bold flex items-center justify-center gap-3 text-base">
+                                <iconify-icon icon="solar:play-bold" class="text-xl"></iconify-icon>
+                                Ver Apresentação
+                            </div>
+                        </button>
+                        <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20como%20me%20tornar%20um%20licenciado%20iGreen."
+                            target="_blank"
+                            class="text-stone-300 hover:text-primary-400 font-bold text-sm flex items-center gap-2 transition-colors group">
+                            Falar com consultor
+                            <iconify-icon icon="solar:arrow-right-linear" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative reveal-up delay-200">
+                    <!-- Video Preview Card -->
+                    <div class="btn-watch-video-trigger relative aspect-video rounded-[40px] overflow-hidden border border-white/10 shadow-2xl group cursor-pointer"
+                        data-video-src="assets/video%202.mp4">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop"
+                            alt="Equipe iGreen"
+                            class="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-1000">
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent"></div>
+                        
+                        <!-- Play Overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-20 h-20 rounded-full bg-primary-500 flex items-center justify-center text-white text-3xl shadow-2xl shadow-primary-500/40 group-hover:scale-110 transition-transform play-btn-pulse">
+                                <iconify-icon icon="solar:play-bold"></iconify-icon>
+                            </div>
+                        </div>
+
+                        <!-- Info Label -->
+                        <div class="absolute bottom-8 left-8">
+                            <p class="text-[10px] font-mono text-primary-400 uppercase tracking-widest mb-2">Apresentação Oficial</p>
+                            <h4 class="text-white font-bold text-lg">Modelo de Negócio iGreen</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
          7. DOBRA — FAQ (PERGUNTAS FREQUENTES)
     ══════════════════════════════════════════════════════ -->
     <section id="faq" class="relative bg-[#EAEAE5] py-24 md:py-32 border-b border-stone-300">
@@ -2435,6 +2665,23 @@
                 <span class="step-marker transition-colors duration-300 cursor-pointer hover:text-white" id="step-07"
                     onclick="document.getElementById('final-cta').scrollIntoView({behavior:'smooth'})">07</span>
             </div>
+        </div>
+    </div>
+
+    <!-- Video Modal Structure -->
+    <div id="video-modal" class="fixed inset-0 z-[200] flex items-center justify-center">
+        <div id="video-modal-overlay" class="absolute inset-0 bg-stone-950/95 backdrop-blur-xl"></div>
+        <div id="video-modal-content"
+            class="relative w-full max-w-5xl aspect-video mx-4 rounded-[32px] overflow-hidden border border-white/10 shadow-2xl scale-95 transition-all duration-500">
+            <button id="btn-close-modal"
+                class="absolute top-6 right-6 z-20 w-12 h-12 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/10 transition-all group">
+                <iconify-icon icon="solar:close-circle-bold"
+                    class="text-2xl group-hover:rotate-90 transition-transform"></iconify-icon>
+            </button>
+            <video id="main-video" class="w-full h-full object-cover" controls>
+                <source src="assets/video%201.mp4" type="video/mp4">
+                Seu navegador não suporta vídeos.
+            </video>
         </div>
     </div>
 
@@ -3004,6 +3251,70 @@
                 startAutoScroll();
             }
 
+            // ══════════════════════════════════════════════════════
+            // VIDEO MODAL LOGIC (Multi-trigger)
+            // ══════════════════════════════════════════════════════
+            const watchBtns = document.querySelectorAll('.btn-watch-video-trigger');
+            const modal = document.getElementById('video-modal');
+            const modalContent = document.getElementById('video-modal-content');
+            const mainVideo = document.getElementById('main-video');
+            const closeModal = document.getElementById('btn-close-modal');
+            const modalOverlay = document.getElementById('video-modal-overlay');
+
+            if (watchBtns.length > 0 && modal) {
+                watchBtns.forEach(btn => {
+                    btn.onclick = (e) => {
+                        if (e) e.preventDefault();
+
+                        // Handle dynamic video source
+                        const videoSrc = btn.getAttribute('data-video-src') || 'assets/video%201.mp4';
+                        const isVertical = btn.getAttribute('data-is-vertical') === 'true';
+
+                        if (mainVideo) {
+                            const source = mainVideo.querySelector('source');
+                            if (source) {
+                                source.src = videoSrc;
+                                mainVideo.load();
+                            }
+                            mainVideo.play();
+                        }
+
+                        // Toggle Aspect Ratio
+                        if (isVertical) {
+                            modalContent.classList.remove('max-w-5xl', 'aspect-video');
+                            modalContent.classList.add('max-w-[380px]', 'aspect-[9/16]');
+                        } else {
+                            modalContent.classList.remove('max-w-[380px]', 'aspect-[9/16]');
+                            modalContent.classList.add('max-w-5xl', 'aspect-video');
+                        }
+
+                        modal.classList.add('active');
+                        // Pause Lenis scroll if it exists
+                        if (typeof lenis !== 'undefined') lenis.stop();
+                    };
+                });
+
+                const hideModal = () => {
+                    modal.classList.remove('active');
+                    if (mainVideo) {
+                        mainVideo.pause();
+                        mainVideo.currentTime = 0;
+                    }
+                    // Resume Lenis scroll
+                    if (typeof lenis !== 'undefined') lenis.start();
+                };
+
+                if (closeModal) closeModal.onclick = hideModal;
+                if (modalOverlay) modalOverlay.onclick = hideModal;
+
+                // Close on Escape key
+                window.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.classList.contains('active')) {
+                        hideModal();
+                    }
+                });
+            }
+
         });
     </script>
 
@@ -3037,6 +3348,16 @@
                     Seja licenciado Igreen e gere comissões recorrentes indicando clientes. Oportunidade única no
                     mercado que mais cresce no Brasil.
                 </p>
+
+                <!-- Popup Video Button -->
+                <button data-video-src="assets/video%202.mp4"
+                    class="btn-watch-video-trigger flex items-center justify-center gap-3 w-full py-4 border border-white/10 rounded-xl mb-4 bg-white/5 hover:bg-white/10 text-stone-300 hover:text-white transition-all group/vid">
+                    <div
+                        class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs group-hover/vid:scale-110 transition-transform">
+                        <iconify-icon icon="solar:play-bold"></iconify-icon>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-widest">Veja como funciona</span>
+                </button>
 
                 <div class="flex flex-col w-full gap-3">
                     <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Vi%20no%20site%20e%20quero%20saber%20mais%20sobre%20como%20ser%20um%20licenciado%20iGreen.%20Pode%20me%20explicar?"
@@ -3106,6 +3427,7 @@
                 if (scrollPercent >= 70) triggerPopup();
             }, { passive: true });
         })();
+
     </script>
 </body>
 
