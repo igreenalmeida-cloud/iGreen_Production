@@ -3306,28 +3306,65 @@
                         navbar.classList.remove('shadow-xl');
                     }
 
-                    // --- SECTION SCROLL PROGRESS & HUD MARKERS ---
-                    const sections = ['hero', 'calculator-panel', 'beneficios', 'clube-beneficios', 'video-gallery', 'como-funciona', 'depoimentos', 'autoridade', 'licenciados', 'faq', 'final-cta'].map(id => document.getElementById(id)).filter(Boolean);
-                    const markers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(num => document.getElementById(`step-${num.toString().padStart(2, '0')}`));
-                    const progressBar = document.getElementById('scroll-progress-bar');
-                    const readingProgress = document.getElementById('reading-progress');
+                    lastScrollTop = currentScrollTop;
+                });
 
-                    if (progressBar) {
-                        const scrollPercent = currentScrollTop / (document.documentElement.scrollHeight - window.innerHeight);
-                        progressBar.style.height = `${Math.min(100, Math.max(0, scrollPercent * 100))}%`;
-                        if (readingProgress) readingProgress.style.width = `${Math.min(100, Math.max(0, scrollPercent * 100))}%`;
+                // --- OPTIMIZED SECTION SCROLL PROGRESS & HUD MARKERS (Fixes Forced Reflow) ---
+                const sections = ['hero', 'calculator-panel', 'beneficios', 'clube-beneficios', 'video-gallery', 'como-funciona', 'depoimentos', 'autoridade', 'licenciados', 'faq', 'final-cta'].map(id => document.getElementById(id)).filter(Boolean);
+                const markers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(num => document.getElementById(`step-${num.toString().padStart(2, '0')}`));
+                const progressBar = document.getElementById('scroll-progress-bar');
+                const readingProgress = document.getElementById('reading-progress');
 
-                        // Activate the current section marker based on viewport
-                        sections.forEach((sec, index) => {
-                            const rect = sec.getBoundingClientRect();
-                            if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-                                markers.forEach(m => m && m.classList.remove('active'));
-                                if (markers[index]) markers[index].classList.add('active');
-                            }
-                        });
+                let sectionBounds = [];
+                let currentActiveIndex = -1;
+
+                function updateSectionBounds() {
+                    const scrollY = window.scrollY; // needed to get absolute offsetTop if already scrolled
+                    sectionBounds = sections.map(sec => {
+                        const rect = sec.getBoundingClientRect();
+                        return {
+                            top: rect.top + scrollY,
+                            bottom: rect.bottom + scrollY
+                        };
+                    });
+                }
+
+                // Initial measurement
+                updateSectionBounds();
+                window.addEventListener('resize', updateSectionBounds);
+
+                // Listen for scroll updates to refresh progress visuals
+                lenis.on('scroll', (e) => {
+                    const scrollTop = e.scroll;
+                    const totalScrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+                    if (progressBar && totalScrollHeight > 0) {
+                        const scrollPercent = (scrollTop / totalScrollHeight) * 100;
+                        progressBar.style.height = `${Math.min(100, Math.max(0, scrollPercent))}%`;
+                        if (readingProgress) readingProgress.style.width = `${Math.min(100, Math.max(0, scrollPercent))}%`;
                     }
 
-                    lastScrollTop = currentScrollTop;
+                    // Check which section is currently active based on stored bounds
+                    const viewportMid = scrollTop + (window.innerHeight / 2);
+                    let newIndex = -1;
+
+                    for (let i = 0; i < sectionBounds.length; i++) {
+                        if (viewportMid >= sectionBounds[i].top && viewportMid <= sectionBounds[i].bottom) {
+                            newIndex = i;
+                            break;
+                        }
+                    }
+
+                    // Only update DOM if the active section actually changed
+                    if (newIndex !== -1 && newIndex !== currentActiveIndex) {
+                        markers.forEach((m, idx) => {
+                            if (m) {
+                                if (idx === newIndex) m.classList.add('active');
+                                else m.classList.remove('active');
+                            }
+                        });
+                        currentActiveIndex = newIndex;
+                    }
                 });
             }
 
