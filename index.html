@@ -975,14 +975,16 @@
                     <!-- Background Dynamic Shadow -->
                     <div class="absolute inset-0 bg-primary-500/30 blur-[120px] rounded-full scale-75 -z-10 animate-pulse"></div>
 
-                    <div class="relative rounded-[64px] p-3 border-[14px] border-stone-800 bg-stone-900 shadow-[0_60px_150px_-20px_rgba(0,0,0,0.9)] overflow-hidden aspect-[9/16] w-full max-w-[400px] group cursor-pointer btn-watch-video-trigger transition-all duration-700 hover:scale-[1.05] hover:shadow-primary-500/30"
+                    <div class="relative rounded-[64px] border-[14px] border-stone-800 bg-stone-900 shadow-[0_60px_150px_-20px_rgba(0,0,0,0.9)] overflow-hidden aspect-[9/16] w-full max-w-[400px] group cursor-pointer btn-watch-video-trigger transition-all duration-700 hover:scale-[1.05] hover:shadow-primary-500/30"
                         data-video-src="assets/video%204.mp4" data-is-vertical="true">
 
-                        <img src="assets/clube-beneficios.png"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[4000ms]"
-                            alt="Clube iGreen" loading="lazy" decoding="async">
+                        <div class="absolute inset-0 overflow-hidden rounded-[48px]">
+                            <img src="assets/clube-beneficios.png"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[4000ms]"
+                                alt="Clube iGreen" loading="lazy" decoding="async">
+                        </div>
 
-                        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent opacity-90"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent opacity-90 z-10 pointer-events-none"></div>
                         
                         <!-- Floating Interactive Badges -->
                         <div class="absolute bottom-12 left-1/2 -translate-x-1/2 w-[85%] flex flex-col gap-4 z-10 transition-all duration-500 group-hover:bottom-16">
@@ -3135,12 +3137,18 @@
             function setupScrubAnimation() {
                 clearTimeout(fallbackTimeout);
 
-                // Show canvas, hide loading
+                // Show canvas, hide loading and poster
                 loading.style.opacity = '0';
-                setTimeout(() => loading.style.display = 'none', 300);
+                const poster = document.getElementById('hero-poster');
+                if (poster) poster.style.opacity = '0';
+                
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    if (poster) poster.style.display = 'none';
+                }, 800);
 
                 // Animate initial canvas fade-in via GSAP to avoid CSS transition conflicts later
-                gsap.to(canvas, { opacity: 1, duration: 1 });
+                gsap.to(canvas, { opacity: 1, duration: 1.2 });
 
                 // GSAP ScrollTrigger for Video Scrubbing (Canvas Drawing)
                 tl = gsap.timeline({
