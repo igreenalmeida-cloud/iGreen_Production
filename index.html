@@ -17,6 +17,10 @@
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK....woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/tDbv2o-fl....woff2" as="font" type="font/woff2" crossorigin>
 
+    <!-- Responsive LCP Preloads (First Frame) -->
+    <link rel="preload" href="assets/frames-webp-mobile/frame_0001_1_1x.webp" as="image" media="(max-width: 768px)">
+    <link rel="preload" href="assets/frames-webp/frame_0001_1_1x.webp" as="image" media="(min-width: 769px)">
+
     <!-- Async Font CSS Loading -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -490,6 +494,14 @@
                     <iconify-icon icon="solar:spinner-bold-duotone"
                         class="text-4xl text-primary-500 animate-spin"></iconify-icon>
                 </div>
+
+                <!-- Responsive Hero Poster (LCP Optimization) -->
+                <picture id="hero-poster" class="absolute inset-0 z-10 w-full h-full">
+                    <source srcset="assets/frames-webp-mobile/frame_0001_1_1x.webp" media="(max-width: 768px)">
+                    <img src="assets/frames-webp/frame_0001_1_1x.webp" 
+                         alt="iGreen Energy" 
+                         class="w-full h-full object-cover">
+                </picture>
 
                 <canvas id="hero-canvas" class="absolute inset-0 w-full h-full object-cover z-10 opacity-0"></canvas>
 
