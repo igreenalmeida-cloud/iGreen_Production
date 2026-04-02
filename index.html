@@ -634,7 +634,7 @@
 
                 <!-- Enhanced Calculator Panel (Dobra 2) -->
                 <div id="calculator-panel"
-                    class="absolute inset-0 m-auto w-[calc(100%-3rem)] md:w-full max-w-[500px] h-fit bg-stone-900/80 backdrop-blur-md md:backdrop-blur-[60px] border border-white/10 rounded-[32px] p-8 lg:p-10 z-30 opacity-0 filter blur-md md:blur-lg translate-y-12 pointer-events-auto shadow-[0_50px_100px_-20px_rgba(0,0,0,0.6)] overflow-hidden transition-all duration-500 hover:border-primary-500/30 group/panel"
+                    class="absolute inset-0 m-auto w-[calc(100%-3rem)] md:w-full max-w-[500px] h-fit bg-stone-900/80 backdrop-blur-md md:backdrop-blur-[60px] border border-white/10 rounded-[32px] p-8 lg:p-10 z-30 opacity-0 invisible filter blur-md md:blur-lg translate-y-12 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.6)] overflow-hidden transition-colors duration-500 hover:border-primary-500/30 group/panel"
                     onmousemove="const calcRect = this.getBoundingClientRect(); this.style.setProperty('--mouse-x', `${event.clientX - calcRect.left}px`); this.style.setProperty('--mouse-y', `${event.clientY - calcRect.top}px`);">
 
                     <!-- Internal Spotlight Effect -->
@@ -729,16 +729,24 @@
                         </div>
 
                         <!-- CTA -->
-                        <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Fiz%20uma%20simula%C3%A7%C3%A3o%20no%20site%20e%20gostaria%20de%20garantir%20meu%20desconto%20na%20conta%20de%20luz."
-                            id="calc-whatsapp-btn" target="_blank"
-                            class="btn-beam btn-beam-green p-[1px] w-full h-16 group block cursor-pointer mb-6">
-                            <div
-                                class="btn-beam-content rounded-[20px] font-bold tracking-wide flex gap-3 items-center justify-center text-lg">
-                                <iconify-icon icon="solar:chat-round-money-bold-duotone"
-                                    class="text-2xl"></iconify-icon>
-                                Garantir esse desconto
-                            </div>
-                        </a>
+                        <div class="flex flex-col gap-3 w-full mb-6">
+                            <a href="https://digital.igreenenergy.com.br/?id=46381"
+                                id="calc-whatsapp-btn" target="_blank"
+                                class="btn-beam btn-beam-green p-[1px] w-full h-16 group block cursor-pointer">
+                                <div
+                                    class="btn-beam-content rounded-[20px] font-bold tracking-wide flex gap-3 items-center justify-center text-lg">
+                                    <iconify-icon icon="solar:chat-round-money-bold-duotone"
+                                        class="text-2xl"></iconify-icon>
+                                    Garantir esse desconto
+                                </div>
+                            </a>
+                            <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Fiz%20uma%20simula%C3%A7%C3%A3o%20no%20site%20e%20gostaria%20de%20garantir%20meu%20desconto%20na%20conta%20de%20luz."
+                                target="_blank"
+                                class="w-full text-stone-400 hover:text-white text-sm font-medium py-3 flex items-center justify-center gap-2 transition-colors border border-white/10 rounded-[20px] bg-white/5 hover:bg-white/10">
+                                <iconify-icon icon="logos:whatsapp-icon" class="text-xl"></iconify-icon>
+                                Falar com consultor
+                            </a>
+                        </div>
 
                         <p
                             class="text-[9px] text-stone-600 text-center font-mono uppercase tracking-[0.2em] opacity-50">
@@ -2808,19 +2816,27 @@
                         Só desconto todo mês na sua conta de luz.
                     </p>
 
-                    <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20minha%20ades%C3%A3o%20%C3%A0%20iGreen%20Energy%20e%20garantir%20meu%20desconto."
-                        class="btn-beam btn-beam-green p-[2px] w-full sm:w-auto h-14 md:h-16 inline-flex cursor-pointer rounded-full relative z-20 hover:scale-105 transition-transform duration-300"
-                        target="_blank">
-                        <div
-                            class="btn-beam-content rounded-full font-semibold tracking-wide flex justify-center items-center text-sm md:text-base px-8 md:px-10 gap-3 relative h-full w-full bg-primary-500 text-white group-hover:bg-primary-600 border-none transition-all duration-300">
-                            <span>Quero meu desconto agora</span>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-20 w-full sm:w-auto">
+                        <a href="https://digital.igreenenergy.com.br/?id=46381"
+                            class="btn-beam btn-beam-green p-[2px] w-full sm:w-auto h-14 md:h-16 inline-flex cursor-pointer rounded-full hover:scale-105 transition-transform duration-300"
+                            target="_blank">
                             <div
-                                class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                                <iconify-icon icon="solar:alt-arrow-right-linear"
-                                    class="text-xs text-white"></iconify-icon>
+                                class="btn-beam-content rounded-full font-semibold tracking-wide flex justify-center items-center text-sm md:text-base px-8 md:px-10 gap-3 relative h-full w-full bg-primary-500 text-white group-hover:bg-primary-600 border-none transition-all duration-300">
+                                <span>Quero meu desconto agora</span>
+                                <div
+                                    class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                                    <iconify-icon icon="solar:alt-arrow-right-linear"
+                                        class="text-xs text-white"></iconify-icon>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                        <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20minha%20ades%C3%A3o%20%C3%A0%20iGreen%20Energy%20e%20garantir%20meu%20desconto."
+                            target="_blank"
+                            class="w-full sm:w-auto text-stone-300 hover:text-primary-400 text-sm font-medium px-8 h-14 flex items-center justify-center gap-2 transition-colors border border-white/10 rounded-full bg-stone-900 shadow-xl hover:bg-stone-800">
+                            <iconify-icon icon="logos:whatsapp-icon" class="text-xl"></iconify-icon>
+                            Falar com consultor
+                        </a>
+                    </div>
 
                     <!-- Footer Tags -->
                     <div
@@ -3269,10 +3285,10 @@
                 const calcPanel = document.getElementById('calculator-panel');
                 if (calcPanel) {
                     tl.fromTo(calcPanel,
-                        { y: 100, opacity: 0, filter: "blur(15px)" },
+                        { y: 100, autoAlpha: 0, filter: "blur(15px)" },
                         {
                             y: 0,
-                            opacity: 1,
+                            autoAlpha: 1,
                             filter: "blur(0px)", // Fully sharp
                             duration: calcDuration,
                             ease: "power2.out",
@@ -3635,14 +3651,21 @@
                 </button>
 
                 <div class="flex flex-col w-full gap-3">
-                    <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Vi%20no%20site%20e%20quero%20saber%20mais%20sobre%20como%20ser%20um%20licenciado%20iGreen.%20Pode%20me%20explicar?"
+                    <a href="https://digital.igreenenergy.com.br/?id=46381"
                         target="_blank"
                         class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-4 text-center rounded-xl transition-all duration-300 transform hover:scale-[1.02]">
                         Quero saber mais →
                     </a>
 
+                    <a href="https://wa.me/553391066586?text=Ol%C3%A1!%20Vi%20no%20site%20e%20quero%20saber%20mais%20sobre%20como%20ser%20um%20licenciado%20iGreen.%20Pode%20me%20explicar?"
+                        target="_blank"
+                        class="w-full text-stone-300 hover:text-primary-400 text-sm font-medium py-3 flex items-center justify-center gap-2 transition-colors border border-white/10 rounded-xl bg-white/5 hover:bg-white/10">
+                        <iconify-icon icon="logos:whatsapp-icon" class="text-xl"></iconify-icon>
+                        Falar com consultor
+                    </a>
+
                     <button id="close-popup-btn"
-                        class="w-full text-stone-500 hover:text-white text-sm font-medium py-2 transition-colors">
+                        class="w-full text-stone-500 hover:text-white text-sm font-medium py-2 transition-colors mt-2">
                         Não, obrigado
                     </button>
                 </div>
